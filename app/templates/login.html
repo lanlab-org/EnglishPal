@@ -1,0 +1,15 @@
+{% block body %}
+{% if session['logged_in'] %}
+
+You're logged in already!
+
+{% else %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+<form action="/login" method="POST">
+  <p><input type="username" name="username" placeholder="邮箱地址、电话号码"></p>
+  <p><input type="password" name="password" placeholder="密码"></p>
+  <p><input type="submit" value="登录"></p>
+</form>
+{% endif %}
+{% endblock %}
+

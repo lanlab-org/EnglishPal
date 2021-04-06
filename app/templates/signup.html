@@ -1,0 +1,19 @@
+{% block body %}
+{% if session['logged_in'] %}
+
+You're logged in already! <a href="/logout">Logout</a>.
+
+{% else %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+<p>{{ get_flashed_messages()[0] | safe }}</p>
+
+<p>Sign up here.</p>
+
+<form action="/signup" method="POST">
+  <p><input type="username" name="username" placeholder="邮箱地址、电话号码"></p>
+  <p><input type="password" name="password" placeholder="密码"></p>  
+  <p><input type="submit" value="注册"></p>
+</form>
+{% endif %}
+{% endblock %}
+
