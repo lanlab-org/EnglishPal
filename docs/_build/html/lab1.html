@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Lab1–Dependency Analysis and Dependency Graph &#8212; EnglishPal none documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to EnglishPal’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="lab1-dependency-analysis-and-dependency-graph">
+<h1>Lab1–Dependency Analysis and Dependency Graph<a class="headerlink" href="#lab1-dependency-analysis-and-dependency-graph" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="abstract">
+<h1>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>EnglishPal是一款致力于为用户提供方便快捷英语学习服务的网页应用。它提供了“单词本”的功能，可供用户查找添加单词，并根据用户的实际英语水平为其推荐合适难度的英语文章。</p>
+<p>此次实验我们主要对EnglishPal的体系结构进行分析。一方面从模块构造的角度，探讨该软件文件间的依赖关系;另一方面从类/函数的角度，深入剖析文件内部类与函数的相互作用，理解软件的运行逻辑。</p>
+</section>
+<section id="materials-and-methods">
+<h1>Materials and Methods<a class="headerlink" href="#materials-and-methods" title="Permalink to this headline">¶</a></h1>
+<p>Materials</p>
+<ul class="simple">
+<li><p>Snakefood</p></li>
+<li><p>Graphviz Online</p></li>
+<li><p>Mermaid Live Editor</p></li>
+</ul>
+<p>Methods</p>
+</section>
+<section id="results">
+<h1>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h1>
+<ul>
+<li><p>模块层（module-level）</p>
+<blockquote>
+<div><p>snakefood.dot:</p>
+<p>依赖图（由Graphviz Online生成）</p>
+</div></blockquote>
+</li>
+<li><p>类/函数层（class-function-level）</p>
+<blockquote>
+<div><p>mermaid.txt:</p>
+<p>依赖图（由Mermaid Live Editor生成）</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="discussions">
+<h1>Discussions<a class="headerlink" href="#discussions" title="Permalink to this headline">¶</a></h1>
+<p>依赖分析</p>
+<p>利弊分析</p>
+<ul class="simple">
+<li><p>界面操作</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>一些文字提示与其所对应的操作之间指示性不强，如主页中“试试”是注册用户操作，这既与上面的“成为会员”操作重复，且含义不明显，用户可能误解为登录操作等。</p></li>
+<li><p>注册账户与登录操作中密码无法可视化，用户难以确认是否有打字错误。</p></li>
+<li><p>登录有误（login中verified为false）时，页面只显示“无法通过验证”，无进一步登录提示，用户只能通过网页上的返回上一页面操作来重新登录。</p></li>
+<li><p>用户注册成功后，跳转的页面所含的功能有些重复且指向性不明确。如”你的用户名是XXX“，用户点击该用户名可跳转至用户页面，这与后面的”开始使用“功能一致，这里单纯显示用户名较好。且”开始使用“相对于”返回主页“也有些意味不明，改为”用户中心“等较好。</p></li>
+</ol>
+<ul class="simple">
+<li><p>代码逻辑</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>mainpage中”粘贴一篇文章“中输入文章并点击”get文章中的词频“后,后台已对这篇文章中的词汇进行了统计与合并（即对frequency.p进行了修改）;但当用户在跳转的页面中对词汇进行勾选（即“mark”该单词）并点击“确认并返回”时，后台又对这些“marked”的词汇进行了统计，重复统计，意味不明。</p></li>
+</ol>
+<ul class="simple">
+<li><p>体系结构</p></li>
+</ul>
+</section>
+<section id="references">
+<h1>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">EnglishPal</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Lab1–Dependency Analysis and Dependency Graph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#materials-and-methods">Materials and Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#discussions">Discussions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#references">References</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to EnglishPal’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, LanHui.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/lab1.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -68,6 +68,5 @@ if __name__ == '__main__':
     #iq.do()
     
     rq = RecordQuery('wordfreqapp.db')
-    rq.instructions("SELECT * FROM article WHERE level=3")
     rq.do()
     #print(rq.format_results())

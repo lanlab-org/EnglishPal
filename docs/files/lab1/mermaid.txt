@@ -1,0 +1,136 @@
+classDiagram
+    WordFreq ..> WordfreqCMD
+    WordfreqCMD <.. Difficulty
+    Sqlite3Template <|-- InsertQuery
+    Sqlite3Template <|-- RecordQuery
+    WordManipulation <.. GetTodayArticle
+    GetTodayArticle ..|>Sqlite3Template
+    Difficulty <|.. GetTodayArticle
+    MainPage ..|> WordFreq
+    WordManipulation <.. MarkWord
+    PickleIdea <|.. WordManipulation
+    MarkWord <-- MainPage
+    UserMarkWord <-- UserPage
+    UserReset <-- UserPage
+    GetTodayArticle <.. UserPage
+    UserPage ..|> PickleIdea2
+    WordFreq <|.. UserPage
+    WordManipulation <.. UserMarkWord
+    Signup --|> UserManipulation
+    Login  --|> UserManipulation
+    Logout  --|> UserManipulation
+    UserManipulation ..|>Sqlite3Template
+    Sqlite3Template <|-- InsertQuery
+    Sqlite3Template <|-- RecordQuery
+    class PickleIdea{
+       %%保存单词和词频
+       +lst2dict(lst, d)
+       +dict2lst(d)
+       +merge_frequency(lst1, lst2)
+       +load_record(pickle_fname)
+       +save_frequency_to_pickle(d, pickle_fname)
+    }
+    class PickleIdea2{
+       %%保存单词和日期
+       +lst2dict(lst, d)
+       +dict2lst(d)
+       +merge_frequency(lst1, lst2)
+       +load_record(pickle_fname)
+       +save_frequency_to_pickle(d, pickle_fname)
+    }
+    
+    class WordfreqCMD{
+      %%处理文章字符串的工具类
+      +freq(string)
+      +youdao_link(string)
+      +file2str(fname)
+      +remove_punctuation(string)
+      +sort_in_descending_order(List)
+      +sort_in_ascending_order(List)
+      +make_html_page (List,fname)
+    }
+    class WordFreq{
+      %%初始化文章，获得词频
+      %%依赖WordfreqCMD
+      +init()
+      +get_freq()
+    }
+    class Difficulty{
+      %%计算文章、用户level，返回难度等级
+      %%依赖WordfreqCMD
+      +load_record(fname)
+      +difficulty_level_from_frequency(word, d)
+      +get_difficulty_level(d1, d2)
+      +revert_dict(d)
+      +user_difficulty_level(d_user, d)
+      +text_difficulty_level(s, d)
+    }
+    class WordManipulation{
+      +String path_prefix
+      +load_freq_history(path)
+      +get_time()
+    }
+    class GetTodayArticle{
+      +dict dic
+      +list article
+      +within_range(x,y,r)
+      +get_question_part(s)
+      +get_answer_part(s)
+    }
+    class MainPage{
+    %%依赖WordFreq
+    %%拥有MarkWord
+    +get_random_image()
+    +get_random_ads()
+    }
+    class MarkWord{
+    %%用于mainpage下标记单词
+    }
+    class UserPage{
+    +date user_expiry_date
+    +String username
+    +String user_freq_record
+    +appears_in_test(word,d)
+    }
+    class UserReset{
+    %%没有匹配文章时，重定向到userpage
+    }
+    class UserMarkWord{
+    %%用于userpage下标记单词
+    }
+    class UserManipulation{
+    +String username
+    +String password
+    +bool available
+    +bool verified
+    +verify_user(username, password)
+    }
+    class Signup{
+    +check_username_availability(username)
+    +add_user(username, password)
+    }
+    class Login{
+    +get_expiry_date(username)
+    }
+    class Logout{
+    }
+    class Sqlite3Template{
+       %%连接数据库
+       +__init__(self, db_fname)     
+       +connect(self, db_fname)
+       +instructions(self, query_statement)  
+       +operate(self):
+       +format_results(self)
+       +do(self)
+    }
+    class InsertQuery{
+      %%插入数据
+      +instructions(self, query)
+    }
+    class RecordQuery{
+      %%记录数据
+      +instructions(self, query)
+      +format_results(self)
+      +get_results(self)
+    }
+

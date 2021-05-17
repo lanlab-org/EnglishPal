@@ -8,12 +8,17 @@ Welcome to EnglishPal's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :titlesonly:
+
+   lab1
 
 
 
 Indices and tables
 ==================
+Hello, This is plaintext.
+
+.. image:: imgs/download_snakefood_error.png
 
 * :ref:`genindex`
 * :ref:`modindex`
