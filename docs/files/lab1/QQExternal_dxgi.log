@@ -1,0 +1,8 @@
+info:  Game: QQExternal.exe
+info:  DXVK: v1.7
+info:  Built-in extension providers:
+info:    Win32 WSI
+info:    OpenVR
+warn:  OpenVR: Failed to locate module
+info:  Required Vulkan extension VK_KHR_surface not supported
+err:   DxvkInstance: Failed to create instance

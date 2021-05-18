@@ -13,12 +13,9 @@ Welcome to EnglishPal's documentation!
    lab1
 
 
-
 Indices and tables
 ==================
-Hello, This is plaintext.
 
-.. image:: imgs/download_snakefood_error.png
 
 * :ref:`genindex`
 * :ref:`modindex`

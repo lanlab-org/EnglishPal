@@ -1,0 +1,11 @@
+main.py中，我们将类别大致分为（1）单词操作类WordManipulation、（2）文章操作类GetTodayArticle、两个页面类（3）mainpage和（4）userpage以及（5）用户类UserManipulation.
+
+在页面类中，MarkWord作为在Mainpage页面下标记单词，仅服务于Mainpage，二者是拥有者与被拥有者的关系;
+
+同样，UserMarkWord作为在Userpage页面下标记单词和UserReset在用户没有匹配文章时重定向回Userpage，仅服务于Userpage，也是拥有者与被拥有者的关系。
+Userpage中还需显示匹配的文章，要用到WordManipulation，因此Userpage依赖于WordManipulation，是使用者与被使用者的关系。
+
+WordManipulation作为对单词的操作类，拥有load_freq_history、get_time等方法，用于加载词频、获取时间。
+而MarkWord、UserMarkWord、UserReset、GetTodayArticle四个类作为页面中对单词进行操作都依赖于WordManipulation，是使用者与被使用者的关系。
+
+在用户类中，UserManipulation具有用户的基本信息：username、password等，以及验证用户名和密码是否通过，用户的操作如Signup、Login、Logout都作为子类继承UserManipulation，实现具体功能。
