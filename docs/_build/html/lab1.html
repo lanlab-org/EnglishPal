@@ -55,43 +55,29 @@
 </section>
 <section id="results">
 <h1>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h1>
-<ul>
-<li><p>模块层（module-level）</p>
-<blockquote>
-<div><p>snakefood.dot:</p>
+<p>模块层（module-level）</p>
+<p>snakefood.dot:</p>
 <p>依赖图（由Graphviz Online生成）</p>
-</div></blockquote>
-</li>
-<li><p>类/函数层（class-function-level）</p>
-<blockquote>
-<div><p>mermaid.txt:</p>
+<p>类/函数层（class-function-level）</p>
+<p>mermaid.txt:</p>
 <p>依赖图（由Mermaid Live Editor生成）</p>
-</div></blockquote>
-</li>
-</ul>
 </section>
 <section id="discussions">
 <h1>Discussions<a class="headerlink" href="#discussions" title="Permalink to this headline">¶</a></h1>
 <p>依赖分析</p>
 <p>利弊分析</p>
-<ul class="simple">
-<li><p>界面操作</p></li>
-</ul>
+<p>界面操作</p>
 <ol class="arabic simple">
 <li><p>一些文字提示与其所对应的操作之间指示性不强，如主页中“试试”是注册用户操作，这既与上面的“成为会员”操作重复，且含义不明显，用户可能误解为登录操作等。</p></li>
 <li><p>注册账户与登录操作中密码无法可视化，用户难以确认是否有打字错误。</p></li>
 <li><p>登录有误（login中verified为false）时，页面只显示“无法通过验证”，无进一步登录提示，用户只能通过网页上的返回上一页面操作来重新登录。</p></li>
 <li><p>用户注册成功后，跳转的页面所含的功能有些重复且指向性不明确。如”你的用户名是XXX“，用户点击该用户名可跳转至用户页面，这与后面的”开始使用“功能一致，这里单纯显示用户名较好。且”开始使用“相对于”返回主页“也有些意味不明，改为”用户中心“等较好。</p></li>
 </ol>
-<ul class="simple">
-<li><p>代码逻辑</p></li>
-</ul>
+<p>代码逻辑</p>
 <ol class="arabic simple">
 <li><p>mainpage中”粘贴一篇文章“中输入文章并点击”get文章中的词频“后,后台已对这篇文章中的词汇进行了统计与合并（即对frequency.p进行了修改）;但当用户在跳转的页面中对词汇进行勾选（即“mark”该单词）并点击“确认并返回”时，后台又对这些“marked”的词汇进行了统计，重复统计，意味不明。</p></li>
 </ol>
-<ul class="simple">
-<li><p>体系结构</p></li>
-</ul>
+<p>体系结构</p>
 </section>
 <section id="references">
 <h1>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>

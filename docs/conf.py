@@ -13,7 +13,15 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
+ 
+# -- Options for LaTeX output ---------------------------------------------
 
+latex_elements = {
+# Using Package for ZH
+'preamble' : r'''
+\usepackage{ctex}
+''',
+}
 
 # -- Project information -----------------------------------------------------
 
