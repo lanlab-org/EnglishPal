@@ -5,7 +5,7 @@
 # You can set these variables from the command line, and also
 # from the environment for the first two.
 SPHINXOPTS    ?=
-SPHINXBUILD   ?= python -m sphinx.cmd.build
+SPHINXBUILD   ?= python -m sphinx
 SOURCEDIR     = .
 BUILDDIR      = _build
 
@@ -20,10 +20,10 @@ help:
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-latexpdf:
-	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
-	@echo "Running LaTeX files through pdflatex..."
-	sed -i s/pdflatex/xelatex/ $(BUILDDIR)/latex/Makefile
-	$(MAKE) -C $(BUILDDIR)/latex all-pdf
-	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
-
+# .PHONY: latexpdf
+# latexpdf:
+# 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+# 	@echo "Running LaTeX files through pdflatex..."
+# 	sed -i s/pdflatex/xelatex/ $(BUILDDIR)/latex/Makefile
+# 	$(MAKE) -C $(BUILDDIR)/latex all-pdf
+# 	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."

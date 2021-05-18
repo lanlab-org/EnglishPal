@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # Configuration file for the Sphinx documentation builder.
 #
 
@@ -30,7 +32,7 @@ copyright = '2021, LanHui'
 author = 'LanHui'
 
 # The full version, including alpha/beta/rc tags
-release = 'none'
+release = 'v0.1'
 
 
 # -- General configuration ---------------------------------------------------
