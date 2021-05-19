@@ -67,7 +67,7 @@ if __name__ == '__main__':
     #iq.instructions("INSERT INTO inspection Values ('CarSupplies', 'RI2019051302', '2019-05-13', '{[{\"risk_name\":\"elevator\"}]}')")
     #iq.do()
     
-    rq = RecordQuery('wordfreqapp.db')
+    rq = RecordQuery('C:/Users/黄文心/Documents/GitHub/EnglishPal/app/static/wordfreqapp.db')
     rq.instructions("SELECT * FROM article WHERE level=3")
     rq.do()
     #print(rq.format_results())

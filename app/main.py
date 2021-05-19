@@ -105,6 +105,12 @@ def get_today_article(user_word_list, articleID):
             
     s = '<p><i>According to your word list, your level is <b>%4.2f</b> and we have chosen an article with a difficulty level of <b>%4.2f</b> for you.</i></p>' % (user_level, text_level)
     s += '<p><b>%s</b></p>' % (d['date'])
+    print(d['text'])
+    text1 = load_freq_history(user_word_list)
+    lst = pickle_idea2.dict2lst(text1)
+    for x in lst:
+        word = x[0]
+        d['text'].replace(word,"\033[0;31m%s\033[0m" % (word))
     s += '<p><font size=+2>%s</font></p>' % (d['text'])
     s += '<p><i>%s</i></p>' % (d['source'])
     s += '<p><b>%s</b></p>' % (get_question_part(d['question']))
