@@ -10,9 +10,11 @@
 * 欧洲 201836900207
 * 杨晗涵 201836900210
 * 刘威 201836900222
-* 来锦涛 201836900220
+* 来锦韬 201836900220
 
-:GitHub地址: `EnglishPal <https://github.com/AWel11/EnglishPal>`_
+:项目GitHub地址: `EnglishPal <https://github.com/AWel11/EnglishPal>`_
+
+:项目Read The Docs地址: `Read The Docs <https://readthedocs.org/projects/englishpal/>`_
 
 Abstract
 ========
@@ -258,7 +260,7 @@ Results
 
 依赖图（由Mermaid Live Editor生成）
 
-.. image:: imgs/lab1/class-function.png
+.. image:: imgs/lab1/class-function-min.jpg
 
 Discussions
 ===========
