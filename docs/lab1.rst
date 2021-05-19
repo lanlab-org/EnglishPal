@@ -13,20 +13,22 @@ EnglishPal是一款致力于为用户提供方便快捷英语学习服务的网�
 
 此次实验我们主要对EnglishPal的体系结构进行分析。一方面从模块构造的角度，探讨该软件文件间的依赖关系;另一方面从类/函数的角度，深入剖析文件内部类与函数的相互作用，理解软件的运行逻辑。
 
+GitHub地址 `EnglishPal <https://github.com/AWel11/EnglishPal>`_
+
 Materials and Methods
 =====================
 
 Materials
 ```````````````
 
-* `Snakefood <https://github.com/blais/snakefood>`_ 一款轻量的Python代码依赖分析做图软件
+* `Snakefood <https://github.com/blais/snakefood>`_ 一款轻量的Python代码依赖分析画图软件
 * `Graphviz Online <https://dreampuf.github.io/GraphvizOnline/>`_ 基于 `Graphviz <https://graphviz.org/>`_ 的绘图网页
 * `Mermaid Live Editor <https://mermaid-js.github.io/mermaid-live-editor/>`_ 在线多功能图形绘制网页
 
 Methods
 ````````
 
-* 借助开源软件，分析并绘制出的模块依赖图。
+* 借助开源软件，分析并绘制出模块依赖图。
 * 阅读源码，手动绘制类与函数的依赖图并简单描述。
 * 对软件进行调试运行，加深理解。
 
@@ -264,7 +266,7 @@ main.py中，我们将类别大致分为（1）单词操作类WordManipulation�
 Userpage中还需显示匹配的文章，要用到WordManipulation，因此Userpage依赖于WordManipulation，是使用者与被使用者的关系。
 
 WordManipulation作为对单词的操作类，拥有load_freq_history、get_time等方法，用于加载词频、获取时间。
-而MarkWord、UserMarkWord、UserReset、GetTodayArticle四个类作为页面中对单词进行操作都依赖于WordManipulation，是使用者与被使用者的关系。
+而MarkWord、UserMarkWord、GetTodayArticle三个类作为页面中对单词进行操作都依赖于WordManipulation，是使用者与被使用者的关系。
 
 在用户类中，UserManipulation具有用户的基本信息：username、password等，以及验证用户名和密码是否通过，用户的操作如Signup、Login、Logout都作为子类继承UserManipulation，实现具体功能。
 
@@ -280,6 +282,20 @@ Difficulty类用于计算一篇英文文章的难度等级，user_difficulty_lev
 
 sqlite3template 类用于连接数据库，其中有insertquery和recordquery两个子类，用于插入和记录数据。
 pickle_idea和pickle_idea2两个类之间没有依赖关系，分别用于单词和词频的记录与单词和日期的记录。load_record方法加载pickle文件，save_frequency_to_pickle方法将数据保存到pickle文件中,merge_frequency方法用于合并两个list。
+
+**整体依赖关系**
+
+main.py中的单词操作类WordManipulation以PickleIdea作为接口，使用了其中的load_record函数获取单词记录，WordManipulation中的markword方法使用merge_frequency添加单词记录
+
+MainPage类实现了WordFreq类，即WordFreq类是MainPage的接口，MainPage类中创建了一个WordFreq对象，使用该对象的get_freq函数获取单词记录频率。
+
+Sqlite3Template类分别是UserManipulation类和GetTodayArticle类的接口：
+UserManipulation类使用InsertQuery方法注册用户，使用RecordQuery方法验证用户名密码服务于用户登录SignUp，同时也是用这个方法检验用户注册是用户名是否重复。
+GetTodayArticle类使用RecordQuery方法从数据库获取文章。
+
+Difficulty类是GetTodayArticle类的接口，GetTodayArticle类使用get_difficulty_level方法获取当前单词频率情况的等级，使用text_difficulty_level方法获取文章等级，使用user_difficulty_level方法计算用户等级。
+
+PickleIdea2类是UserPage类的的接口，UserPage类使用dict2lst获取历史单词频率，使用merge_frequency新增不认识的词汇，使用save_frequency_to_pickle将新增单词保存到pickle。
 
 利弊分析
 ```````````
@@ -297,7 +313,7 @@ pickle_idea和pickle_idea2两个类之间没有依赖关系，分别用于单词
 
 **体系结构**
 
-#. EnglishPal的模块化虽然纵向维度不深，但横向维度较好的将各个功能从主要的业务逻辑中抽离出来，在main.py中有条不紊的调用各分模块的功能，使得整体结构较为清晰。
+#. EnglishPal的模块化虽然纵向维度不深，但在横向维度上较好的将各个功能从主要的业务逻辑中抽离出来，在main.py中有条不紊的调用各分模块的功能，使得整体结构较为清晰。
 #. 整体采用了经典的MVC网页应用体系结构，使得显示层、业务层与数据层彼此间相互较为独立，利于进一步的功能开发。
 #. 在业务逻辑代码中嵌入了大量的网页显示代码，不仅使得分析代码与维护软件困难，更提高了更新应用的难度。
 
