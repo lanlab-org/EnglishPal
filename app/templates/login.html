@@ -8,6 +8,10 @@ You're logged in already!
 <form action="/login" method="POST">
   <p><input type="username" name="username" placeholder="邮箱地址、电话号码"></p>
   <p><input type="password" name="password" placeholder="密码"></p>
+   <!--Login error message -->
+   {% if error %}
+   <div style="color: red;">{{ error }} </div> 
+   {% endif %} 
   <p><input type="submit" value="登录"></p>
 </form>
 {% endif %}
