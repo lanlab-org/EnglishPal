@@ -11,7 +11,6 @@ pipeline {
 	    }
 	    stage('MakeDatabasefile') {
             steps {
-                sh 'touch ./app/static/wordfreqapp.db && rm -f ./app/static/wordfreqapp.db'
                 sh 'cat ./app/static/wordfreqapp.sql | sqlite3 ./app/static/wordfreqapp.db'
             }
         }
