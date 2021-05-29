@@ -38,8 +38,8 @@ def load_freq_history(path):
 
 def verify_user(username, password):
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
-    rq.instructions("SELECT * FROM user WHERE name='%s' AND password='%s'" % (username, password))
-    rq.do()
+    rq.instructions_with_parameters("SELECT * FROM user WHERE name=? AND password=?", (username, password))
+    rq.do_with_parameters()
     result = rq.get_results()
     return result != []
 

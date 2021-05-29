@@ -31,6 +31,20 @@ class Sqlite3Template:
         self.connect(self.db_fname)
         self.instructions(self.query)
         self.operate()
+        
+    def instructions_with_parameters(self, query_statement, parameters):
+        self.query = query_statement
+        self.parameters = parameters
+
+    def do_with_parameters(self):
+        self.connect(self.db_fname)
+        self.instructions_with_parameters(self.query, self.parameters)
+        self.operate_with_parameters()
+
+    def operate_with_parameters(self):
+        self.conn.row_factory = sqlite3.Row
+        self.results = self.conn.execute(self.query, self.parameters) # self.query is to be given in the child classes
+        self.conn.commit()
 
         
 class InsertQuery(Sqlite3Template):
