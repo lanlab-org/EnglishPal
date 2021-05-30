@@ -16,7 +16,7 @@ from datetime import datetime
 from flask import Flask, request, redirect, render_template, url_for, session, abort, flash
 from difficulty import get_difficulty_level, text_difficulty_level, user_difficulty_level
 import EverydayArticle as today
-import AqlWords as sql
+import SqlWords as sql
 app = Flask(__name__)
 app.secret_key = 'lunch.time!'
 
@@ -29,7 +29,7 @@ def get_random_image(path):
 
 def get_random_ads():
     ads = random.choice(['个性化分析精准提升', '你的专有单词本', '智能捕捉阅读弱点，针对性提高你的阅读水平'])
-    return ads + '。 <a href="/signup">试试</a>吧！'
+    return ads
 
 def load_freq_history(path):
     d = {}
@@ -94,39 +94,25 @@ def mainpage():
         
         return page
     elif request.method == 'GET': # when we load a html page
-        page = '''
-             <html lang="zh">
-               <head>
-               <meta charset="utf-8">
-               <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
-                 <title>EnglishPal 英文单词高效记</title>
-
-               </head>
-               <body>
-        '''
-        page += '<p><b><font size="+3" color="red">English Pal - Learn English in a smart way!</font></b></p>'
+        user = ''
+        youdao = {}
+        Eword = {}
+        EwordNum = {}
         if session.get('logged_in'):
-            page += ' <a href="%s">%s</a></p>\n' % (session['username'], session['username'])
-        else:
-            page += '<p><a href="/login">登录</a>  <a href="/signup">成为会员</a> <a href="/static/usr/instructions.html">使用说明</a></p>\n'
-        #page += '<p><img src="%s" width="400px" alt="advertisement"/></p>' % (get_random_image(path_prefix + 'static/img/'))
-        page += '<p><b>%s</b></p>' % (get_random_ads())
-        page += '<p>粘帖1篇文章 (English only)</p>'
-        page += '<form method="post" action="/">'
-        page += ' <textarea name="content" rows="10" cols="120"></textarea><br/>'
-        page += ' <input type="submit" value="get文章中的词频"/>'
-        page += ' <input type="reset" value="清除"/>'
-        page += '</form>'
+            user=session['username']
+        random_ads = get_random_ads()
         d = load_freq_history(path_prefix + 'static/frequency/frequency.p')
+        xi = 1
         if len(d) > 0:
-            page += '<p><b>最常见的词</b></p>'
             for x in sort_in_descending_order(pickle_idea.dict2lst(d)):
                 if x[1] <= 99:
                     break
-                page += '<a href="%s">%s</a> %d\n' % (youdao_link(x[0]), x[0], x[1])
+                youdao[xi] = youdao_link(x[0])
+                Eword[xi] = x[0]
+                EwordNum[xi] = x[1]
+                xi=xi+1
 
-        page += '</body></html>'
-        return page
+        return render_template('homepage.html', user=user,random_ads=random_ads,youdao=youdao,Eword=Eword,EwordNum=EwordNum,xi=xi)
 
 
 @app.route("/<username>/mark", methods=['GET', 'POST'])
@@ -146,48 +132,47 @@ def user_mark_word(username):
         return 'Under construction'
 
 
-
 @app.route("/<username>", methods=['GET', 'POST'])
 def userpage(username):
-    
     if not session.get('logged_in'):
         return '<p>请先<a href="/login">登录</a>。</p>'
 
     user_expiry_date = session.get('expiry_date')
     if datetime.now().strftime('%Y%m%d') > user_expiry_date:
-        return '<p>账号 %s 过期。</p><p>为了提高服务质量，English Pal 收取会员费用， 每天0元。</p> <p>请决定你要试用的时间长度，扫描下面支付宝二维码支付。 支付时请注明<i>English Pal Membership Fee</i>。 我们会于12小时内激活账号。</p><p><img src="static/donate-the-author-hidden.jpg" width="120px" alt="支付宝二维码" /></p><p>如果有问题，请加开发者微信 torontohui。</p> <p><a href="/logout">登出</a></p>' % (username)
+        return '<p>账号 %s 过期。</p><p>为了提高服务质量，English Pal 收取会员费用， 每天0元。</p> <p>请决定你要试用的时间长度，扫描下面支付宝二维码支付。 支付时请注明<i>English Pal Membership Fee</i>。 我们会于12小时内激活账号。</p><p><img src="static/donate-the-author-hidden.jpg" width="120px" alt="支付宝二维码" /></p><p>如果有问题，请加开发者微信 torontohui。</p> <p><a href="/logout">登出</a></p>' % (
+            username)
 
-    
     username = session.get('username')
 
-    user_freq_record = path_prefix + 'static/frequency/' +  'frequency_%s.pickle' % (username)
-    
+    user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
+
     if request.method == 'POST':  # when we submit a form
         content = request.form['content']
         f = WordFreq(content)
         lst = f.get_freq()
-        page = '<meta charset="UTF8">'        
-        page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />'        
+        page = '<meta charset="UTF8">'
+        page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />'
         page += '<p>勾选不认识的单词</p>'
         page += '<form method="post" action="/%s/mark">\n' % (username)
-        page += ' <input type="submit" name="add-btn" value="加入我的生词簿"/>\n'        
+        page += ' <input type="submit" name="add-btn" value="加入我的生词簿"/>\n'
         count = 1
-        words_tests_dict = pickle_idea.load_record(path_prefix + 'static/words_and_tests.p')        
+        words_tests_dict = pickle_idea.load_record(path_prefix + 'static/words_and_tests.p')
         for x in lst:
-            page += '<p><font color="grey">%d</font>: <a href="%s" title="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (count, youdao_link(x[0]), appears_in_test(x[0], words_tests_dict), x[0], x[1], x[0])
+            page += '<p><font color="grey">%d</font>: <a href="%s" title="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (
+            count, youdao_link(x[0]), appears_in_test(x[0], words_tests_dict), x[0], x[1], x[0])
             count += 1
         page += '</form>\n'
         return page
-    
-    elif request.method == 'GET': # when we load a html page
+
+    elif request.method == 'GET':  # when we load a html page
         page = '<meta charset="UTF8">\n'
         page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />\n'
-        page += '<meta name="format-detection" content="telephone=no" />\n' # forbid treating numbers as cell numbers in smart phones
+        page += '<meta name="format-detection" content="telephone=no" />\n'  # forbid treating numbers as cell numbers in smart phones
         page += '<title>EnglishPal Study Room for %s</title>' % (username)
         page += '<p><b>English Pal for <font color="red">%s</font></b> <a href="/logout">登出</a></p>' % (username)
         page += '<p><a href="/%s/reset">下一篇</a></p>' % (username)
         page += '<p><b>阅读文章并回答问题</b></p>\n'
-        page += '<div id="text-content">%s</div>'  % (today.Get(user_freq_record, session['articleID']))
+        page += '<div id="text-content">%s</div>' % (today.Get(user_freq_record, session['articleID']))
         page += '<p><b>收集生词吧</b> （可以在正文中划词，也可以复制黏贴）</p>'
         page += '<form method="post" action="/%s">' % (username)
         page += ' <textarea name="content" id="selected-words" rows="10" cols="120"></textarea><br/>'
@@ -208,7 +193,7 @@ def userpage(username):
                    document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);
                  </script>
                  '''
-        
+
         d = load_freq_history(user_freq_record)
         if len(d) > 0:
             page += '<p><b>我的生词簿</b></p>'
@@ -219,15 +204,16 @@ def userpage(username):
             for x in sort_in_descending_order(lst2):
                 word = x[0]
                 freq = x[1]
-                if isinstance(d[word], list): # d[word] is a list of dates
+                if isinstance(d[word], list):  # d[word] is a list of dates
                     if freq > 1:
-                        page += '<p class="new-word"> <a href="%s">%s</a>                     (<a title="%s">%d</a>) </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq)
+                        page += '<p class="new-word"> <a href="%s">%s</a>                     (<a>%d</a>) </p>\n' % (
+                        youdao_link(word), word, freq)
                     else:
-                        page += '<p class="new-word"> <a href="%s">%s</a> <font color="white">(<a title="%s">%d</a>)</font> </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq)
-                elif isinstance(d[word], int): # d[word] is a frequency. to migrate from old format.
-                    page += '<a href="%s">%s</a>%d\n' % (youdao_link(word), word, freq)                    
-                    
-                
+                        page += '<p class="new-word"> <a href="%s">%s</a> <font color="white">(<a>%d</a>)</font> </p>\n' % (
+                        youdao_link(word), word, freq)
+                elif isinstance(d[word], int):  # d[word] is a frequency. to migrate from old format.
+                    page += '<a href="%s">%s</a>%d\n' % (youdao_link(word), word, freq)
+
         return page
 
 ### Sign-up, login, logout ###

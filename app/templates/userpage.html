@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>EnglishPal Study Room for {{user}}</title>
+    <script>
+        function getWord(){
+        ar word = window.getSelection?window.getSelection():document.selection.createRange().text;
+        return word;
+        }
+        function fillinWord(){
+             var element = document.getElementById("selected-words");
+             element.value = element.value + " " + getWord();
+        }
+        document.getElementById("text-content").addEventListener("click", fillinWord, false);
+        document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);
+    </script>
+
+</head>
+<body>
+        <p><b>English Pal for <font color="red">{{user}}</font></b> <a href="/logout">登出</a></p>
+        <p><a href="/{{user}}/reset">下一篇</a></p>
+        <p><b>阅读文章并回答问题</b></p>
+        <div id="text-content">{{dayartical}}</div>
+        <p><b>收集生词吧</b> （可以在正文中划词，也可以复制黏贴）</p>
+            <form method="post" action="/{{user}}">
+             <textarea name="content" id="selected-words" rows="10" cols="120"></textarea><br/>
+             <input type="submit" value="get 所有词的频率"/>
+             <input type="reset" value="清除"/>
+            </form>
+        <p><b>我的生词簿</b></p>
+        {% for i in range(xi) %}
+            {% if fff[i] %}
+                {% if freq>1 %}
+                    <p class="new-word"> <a href="{{youdao[i]}}">{{word[i]}}</a> ; (<a title="%s">{{freq[i]}}</a>) </p>
+                {% else %}
+                    <p class="new-word"> <a href="{{youdao[i]}}">{{word[i]}}</a> ; <font color="white">(<a>{{freq[i]}}</a>)</font> </p>
+                {% endif %}
+            {% else %}
+                <a href="{{youdao[i]}}">{{word[i]}}</a> {{freq[i]}}
+                fff[xi] = 0
+            {% endif %}
+            <a href={{youdao[i]}}>{{word[i]}}</a> {{freq[i]}}
+        {% endfor %}
+</body>
+</html>

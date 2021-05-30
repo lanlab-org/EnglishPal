@@ -12,7 +12,7 @@ import os
 import random
 from flask import Flask, session
 from difficulty import get_difficulty_level, text_difficulty_level, user_difficulty_level
-import AqlWords as sql
+import SqlWords as sql
 
 app = Flask(__name__)
 app.secret_key = 'lunch.time!'
