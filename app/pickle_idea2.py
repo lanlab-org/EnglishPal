@@ -25,6 +25,15 @@ def lst2dict(lst, d):
         else:
             d[word] += dates
 
+def deleteRecord(path,word):
+    with open(path, 'rb') as f:
+        db = pickle.load(f)
+    try:
+        db.pop(word)
+    except KeyError:
+        print("sorry")
+    with open(path, 'wb') as ff:
+            pickle.dump(db, ff)
 
 def dict2lst(d):
     if len(d) > 0:

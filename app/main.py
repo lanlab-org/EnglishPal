@@ -269,7 +269,11 @@ def user_mark_word(username):
     else:
         return 'Under construction'
 
-
+@app.route("/<username>/<word>/del", methods=['GET', 'POST'])
+def deleteword(username,word):
+    user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
+    pickle_idea2.deleteRecord(user_freq_record,word)
+    return redirect(url_for('userpage', username=username))
 
 @app.route("/<username>", methods=['GET', 'POST'])
 def userpage(username):
@@ -345,9 +349,9 @@ def userpage(username):
                 freq = x[1]
                 if isinstance(d[word], list): # d[word] is a list of dates
                     if freq > 1:
-                        page += '<p class="new-word"> <a href="%s">%s</a>                     (<a title="%s">%d</a>) </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq)
+                        page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>) <a href="%s/%s/del">删除</a>  </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word)
                     else:
-                        page += '<p class="new-word"> <a href="%s">%s</a> <font color="white">(<a title="%s">%d</a>)</font> </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq)
+                        page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>)  <a href="%s/%s/del" >删除</a></p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word)
                 elif isinstance(d[word], int): # d[word] is a frequency. to migrate from old format.
                     page += '<a href="%s">%s</a>%d\n' % (youdao_link(word), word, freq)                    
                     
