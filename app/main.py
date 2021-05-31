@@ -9,7 +9,7 @@
 from WordFreq import WordFreq
 from wordfreqCMD import youdao_link, sort_in_descending_order
 from UseSqlite import InsertQuery, RecordQuery
-import pickle_idea, pickle_idea2
+import pickle_idea, pickle_idea2, pickle_article_frequency_today
 import os
 import random, glob
 from datetime import datetime
@@ -44,7 +44,7 @@ def verify_user(username, password):
     return result != []
 
 def add_user(username, password):
-    start_date = datetime.now().strftime('%Y%m%d')
+    start_date = get_date()
     expiry_date = '20211230'
     rq = InsertQuery(path_prefix + 'static/wordfreqapp.db')
     rq.instructions("INSERT INTO user Values ('%s', '%s', '%s', '%s')" % (username, password, start_date, expiry_date))
@@ -64,6 +64,7 @@ def get_expiry_date(username):
     rq.do()
     result = rq.get_results()
     if len(result) > 0:
+        print(result[0]['expiry_date'])
         return  result[0]['expiry_date']
     else:
         return '20191024'
@@ -76,14 +77,43 @@ def within_range(x, y, r):
 
 def get_today_article(user_word_list, articleID):
 
+    # get user_article_frequency
+    username = session['username']
+    user_arti_freq_filename = path_prefix + 'static/article_frequency/' +  'article_frequency_%s.pickle' % (username)
+
+    # 处理favicon.ico这个，每个请求会执行两次，导致本来articleID为None的请求变为articleID为特定值，这会导致错误。同时articleID这个值就是为了使得点击下一篇显示下一篇文章，而除此之外的任何操作（如刷新页面，从另一页面返回userpage等）都显示当前文章。这两个前提，致使只能出此计策（目前）。
+    # 比如说，此时该用户中3号文章已访问3次，按理说还能访问一次。但他按下下一篇后，reset将articleID置为None,并正好选择了3号文章，那么3号文章就会变为4次。然而这时该请求还会执行一次，且没有了reset的置None,articleID此时就为3,后面的“剔除”操作又会将为3号文章的result给清空（因为3号文章访问次数已>4），导致报错。
+    if os.path.exists(user_arti_freq_filename):
+        user_arti_freq_record = pickle_article_frequency_today.load_record(user_arti_freq_filename)
+        if articleID != None and user_arti_freq_record[articleID][0] > 3:
+            articleID = None
+
+
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
-    if articleID == None:    
+    if articleID == None:
         rq.instructions("SELECT * FROM article")
     else:
         rq.instructions('SELECT * FROM article WHERE article_id=%d' % (articleID))
     rq.do()
     result = rq.get_results()
+
     
+    # set user_article_frequency as a empty dict if not exist
+    if os.path.exists(user_arti_freq_filename):
+        user_arti_freq_record = pickle_article_frequency_today.load_record(user_arti_freq_filename)
+        print(user_arti_freq_record)
+        # flush user_article_frequency if date is different
+        if get_date() != user_arti_freq_record[list(user_arti_freq_record)[0]][1]:
+            user_arti_freq_record = {}
+        else:
+            # delete articles from result that already showed > 3 times
+            for article in result:
+                if article["article_id"] in user_arti_freq_record and user_arti_freq_record[article["article_id"]][0] > 3:
+                    result.remove(article)
+    else:
+        user_arti_freq_record = {}
+
+
     # Choose article according to reader's level
     d1 = load_freq_history(path_prefix + 'static/frequency/frequency.p')
     d2 = load_freq_history(path_prefix + 'static/words_and_tests.p')
@@ -102,6 +132,14 @@ def get_today_article(user_word_list, articleID):
             if within_range(text_level, user_level, 0.5):
                 d = reading
                 break
+
+
+    # incorporate this article in the user_article_frequency
+    print("this article: %d" %(d["article_id"]))
+    if articleID == None:
+        pickle_article_frequency_today.add_article_frequency(user_arti_freq_record, d["article_id"])
+        pickle_article_frequency_today.save_frequency_to_pickle(user_arti_freq_record, user_arti_freq_filename)
+
             
     s = '<p><i>According to your word list, your level is <b>%4.2f</b> and we have chosen an article with a difficulty level of <b>%4.2f</b> for you.</i></p>' % (user_level, text_level)
     s += '<p><b>%s</b></p>' % (d['date'])
@@ -122,7 +160,10 @@ def appears_in_test(word, d):
 
 
 def get_time():
-    return datetime.now().strftime('%Y%m%d%H%M') # upper to minutes
+    return datetime.now().strftime('%y%m%d%H%M') # upper to minutes
+
+def get_date():
+    return datetime.now().strftime('%Y%m%d') # upper to minutes
 
 
 def get_question_part(s):
@@ -278,7 +319,7 @@ def userpage(username):
         return '<p>请先<a href="/login">登录</a>。</p>'
 
     user_expiry_date = session.get('expiry_date')
-    if datetime.now().strftime('%Y%m%d') > user_expiry_date:
+    if get_date()  > user_expiry_date:
         return '<p>账号 %s 过期。</p><p>为了提高服务质量，English Pal 收取会员费用， 每天0元。</p> <p>请决定你要试用的时间长度，扫描下面支付宝二维码支付。 支付时请注明<i>English Pal Membership Fee</i>。 我们会于12小时内激活账号。</p><p><img src="static/donate-the-author-hidden.jpg" width="120px" alt="支付宝二维码" /></p><p>如果有问题，请加开发者微信 torontohui。</p> <p><a href="/logout">登出</a></p>' % (username)
 
     
@@ -409,6 +450,7 @@ def login():
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
     session['logged_in'] = False
+    session['articleId'] = None
     return redirect(url_for('mainpage'))
 
 
