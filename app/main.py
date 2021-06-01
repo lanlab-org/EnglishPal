@@ -105,7 +105,7 @@ def get_today_article(user_word_list, articleID):
             
     s = '<p><i>According to your word list, your level is <b>%4.2f</b> and we have chosen an article with a difficulty level of <b>%4.2f</b> for you.</i></p>' % (user_level, text_level)
     s += '<p><b>%s</b></p>' % (d['date'])
-    s += '<p><font size=+2>%s</font></p>' % (d['text'])
+    s += '<p><font id="article" size=+2>%s</font></p>' % (d['text'])
     s += '<p><i>%s</i></p>' % (d['source'])
     s += '<p><b>%s</b></p>' % (get_question_part(d['question']))
     s = s.replace('\n', '<br/>')    
@@ -318,20 +318,37 @@ def userpage(username):
         page += ' <input type="submit" value="get 所有词的频率"/>'
         page += ' <input type="reset" value="清除"/>'
         page += '</form>\n'
-        page += ''' 
-                 <script>
-                   function getWord(){ 
-                       var word = window.getSelection?window.getSelection():document.selection.createRange().text;
-                       return word;
-                   }
-                   function fillinWord(){
-                       var element = document.getElementById("selected-words");
-                       element.value = element.value + " " + getWord();
-                   }
-                   document.getElementById("text-content").addEventListener("click", fillinWord, false);
-                   document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);
-                 </script>
-                 '''
+        page += '<script type="text/javascript">'
+        page += '   function getWord(){ \n'
+        page += '      var word = window.getSelection?window.getSelection():document.selection.createRange().text;\n'
+        page += '      return word;\n'
+        page += '   }\n'
+        page += '   function highLight(){ \n'
+        page += '      var txt=document.getElementById("article").innerText\n'
+        page += '      var list=document.getElementById("selected-words").value.split(" ");\n'
+        page += '      console.log(list.length);\n'
+        page += '      for(var i=0;i<list.length;++i){\n'
+        page += '      console.log(list[i]);\n'
+        page += '          list[i]=list[i].replace(/(^\s*)|(\s*$)/g, "");\n'
+        page += '          if(list[i]!="")txt=txt.replace(new RegExp(list[i],"g"),"<mark>"+list[i]+"</mark>");\n'
+        #page += '         while(txt.indexOf(list[i])>-1){\n'
+        #page += '          var pos=txt.indexOf(list[i]);\n'
+        #page += '          if(pos!=-1){\n'
+        #page += '              console.log(pos);;\n'
+        #page += '              txt=""+(txt.substring(0,pos)+"<mark>"+list[i]+"</mark>"+txt.substring((pos+list[i].length),txt.length));\n'
+        #page += '           };\n'
+        page += '      }\n'
+        page += '      document.getElementById("article").innerHTML=txt;\n'
+        page += '   }\n'
+        page += '   function fillinWord(){\n'
+        page += '      var element = document.getElementById("selected-words");\n'
+        page += '      element.value = element.value + " " + getWord();\n'
+        page += '      highLight();\n'
+        page += '   }\n'
+        page += '   document.getElementById("text-content").addEventListener("click", fillinWord, false);\n'
+        page += '   document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);\n'
+        page += '   window.setInterval("highLight()", 10000);\n'
+        page += '</script>\n'
         
         d = load_freq_history(user_freq_record)
         if len(d) > 0:
