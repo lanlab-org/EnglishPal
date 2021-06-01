@@ -9,11 +9,7 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/SPM-Spring2021-2599-张小飞201831990641']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '15b0474b-b8eb-4574-9506-464f19a2b33e', url: 'https://github.com/lanlab-org/EnglishPal.git']]])
             }
 	    }
-	    stage('MakeDatabasefile') {
-            steps {
-                sh 'cat ./app/static/wordfreqapp.sql | sqlite3 ./app/static/wordfreqapp.db'
-            }
-        }
+	   
         stage('BuildIt') {
             steps {
                 echo 'Building..'
@@ -31,10 +27,6 @@ pipeline {
                 sh 'python3 -m pytest -v -s ./app/test'
             }
         }
-        stage('DeployIt') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
+     
     }
 }
