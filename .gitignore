@@ -6,4 +6,5 @@ app/static/usr/*.jpg
 app/static/img/
 app/static/frequency/frequency_*.pickle
 app/static/frequency/frequency.p
+app/static/wordfreqapp.db
 
