@@ -18,7 +18,7 @@ pipeline {
             steps {
                 echo 'Building..'
                 sh 'sudo docker build -t englishpalzhangxf .'
-                sh 'sudo docker stop $(docker ps -aq)'
+                sh 'sudo docker stop englishpalzhangxf'
                 sh 'sudo docker run -d -p 5000:80 -v /var/lib/jenkins/workspace/EnglishPal_Pipeline_master/app/static/frequency:/app/static/frequency  -t englishpalzhangxf'
             }
         }
