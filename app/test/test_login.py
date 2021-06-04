@@ -60,6 +60,9 @@ def test_login():
         driver.save_screenshot('./app/test/test_login_pic4.png')    
         assert 'EnglishPal Study Room for ' + uname in  driver.title
 
+        #logout
+        driver.get(HOME_PAGE + 'logout')
+
         # 测试bug是否修复
         driver.get(HOME_PAGE)
         elem = driver.find_element_by_link_text('登录')
