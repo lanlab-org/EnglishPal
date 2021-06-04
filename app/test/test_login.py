@@ -59,5 +59,19 @@ def test_login():
     
         driver.save_screenshot('./app/test/test_login_pic4.png')    
         assert 'EnglishPal Study Room for ' + uname in  driver.title
+
+        # 测试bug是否修复
+        driver.get(HOME_PAGE)
+        elem = driver.find_element_by_link_text('登录')
+        elem.click()
+        uname = 'lanhui'
+        elem = driver.find_element_by_name('username')
+        elem.send_keys(uname)
+        elem = driver.find_element_by_name('password')
+        elem.send_keys("' or 'a'='a'or'a'='a")
+        elem = driver.find_element_by_xpath('//form[1]/p[3]/input[1]') # 找到登录按钮
+        elem.click()
+        driver.save_screenshot('./app/test/test_login_pic5.png')
+        assert '无法通过验证。' in driver.page_source
     finally:
         driver.quit()
