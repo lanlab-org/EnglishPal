@@ -28,7 +28,7 @@ def get_random_image(path):
 
 def get_random_ads():
     ads = random.choice(['个性化分析精准提升', '你的专有单词本', '智能捕捉阅读弱点，针对性提高你的阅读水平'])
-    return ads + '。 <a href="/signup">试试</a>吧！'
+    return ads
 
 def load_freq_history(path):
     d = {}
@@ -102,7 +102,6 @@ def get_today_article(user_word_list, articleID):
             if within_range(text_level, user_level, 0.5):
                 d = reading
                 break
-            
     s = '<p><i>According to your word list, your level is <b>%4.2f</b> and we have chosen an article with a difficulty level of <b>%4.2f</b> for you.</i></p>' % (user_level, text_level)
     s += '<p><b>%s</b></p>' % (d['date'])
     s += '<p><font size=+2>%s</font></p>' % (d['text'])
@@ -218,39 +217,25 @@ def mainpage():
         
         return page
     elif request.method == 'GET': # when we load a html page
-        page = '''
-             <html lang="zh">
-               <head>
-               <meta charset="utf-8">
-               <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
-                 <title>EnglishPal 英文单词高效记</title>
-
-               </head>
-               <body>
-        '''
-        page += '<p><b><font size="+3" color="red">English Pal - Learn English in a smart way!</font></b></p>'
+        user = ''
+        youdao = {}
+        getWord = {}
+        getwordNum = {}
         if session.get('logged_in'):
-            page += ' <a href="%s">%s</a></p>\n' % (session['username'], session['username'])
-        else:
-            page += '<p><a href="/login">登录</a>  <a href="/signup">成为会员</a> <a href="/static/usr/instructions.html">使用说明</a></p>\n'
-        #page += '<p><img src="%s" width="400px" alt="advertisement"/></p>' % (get_random_image(path_prefix + 'static/img/'))
-        page += '<p><b>%s</b></p>' % (get_random_ads())
-        page += '<p>粘帖1篇文章 (English only)</p>'
-        page += '<form method="post" action="/">'
-        page += ' <textarea name="content" rows="10" cols="120"></textarea><br/>'
-        page += ' <input type="submit" value="get文章中的词频"/>'
-        page += ' <input type="reset" value="清除"/>'
-        page += '</form>'
+            user = session['username']
+        random_ads = get_random_ads()
         d = load_freq_history(path_prefix + 'static/frequency/frequency.p')
+        word = 1
         if len(d) > 0:
-            page += '<p><b>最常见的词</b></p>'
             for x in sort_in_descending_order(pickle_idea.dict2lst(d)):
                 if x[1] <= 99:
                     break
-                page += '<a href="%s">%s</a> %d\n' % (youdao_link(x[0]), x[0], x[1])
-
-        page += '</body></html>'
-        return page
+                youdao[word] = youdao_link(x[0])
+                getWord[word] = x[0]
+                getwordNum[word] = x[1]
+                word = word + 1
+                
+        return render_template('mainpage.html', user=user, random_ads=random_ads, youdao=youdao, getWord=getWord, getwordNum=getwordNum, word=word)
 
 
 @app.route("/<username>/mark", methods=['GET', 'POST'])
