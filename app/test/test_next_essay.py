@@ -9,7 +9,7 @@ import random, string, time
 driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.CHROME)
 driver.implicitly_wait(10)
 
-HOME_PAGE = 'http://121.4.94.30:5000/'
+HOME_PAGE = 'http://121.4.94.30:91/'
 
 
 
