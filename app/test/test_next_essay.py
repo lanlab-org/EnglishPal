@@ -41,7 +41,7 @@ def test_next():
         essay_content = elem.text
     
         # click Next
-        differ = 0
+        diff = 0
         for i in range(3):
             elem = driver.find_element_by_link_text('下一篇')
             elem.click()
