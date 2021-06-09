@@ -7,4 +7,5 @@ app/static/img/
 app/static/frequency/frequency_*.pickle
 app/static/frequency/frequency.p
 app/static/wordfreqapp.db
-
+app/static/donate-the-author.jpg
+app/static/donate-the-author-hidden.jpg

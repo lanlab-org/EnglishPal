@@ -67,15 +67,5 @@ def test_add_word_and_essay_does_not_change():
         index = current_essay_content.find('for you.')
         assert current_essay_content[index:] == essay_content[index:]
     
-        # click the Next button. Now the essay should change.
-        elem = driver.find_element_by_link_text('下一篇') # 找到get所有词频按钮
-        elem.click()
-    
-        # compare again
-        driver.save_screenshot('./app/test/test_add_word_and_essay_does_not_change_pic2.png')
-        elem = driver.find_element_by_id('text-content')
-        next_essay_content = elem.text
-    
-        assert current_essay_content[index:] != next_essay_content[index:]
     finally:
         driver.quit()
