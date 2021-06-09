@@ -27,7 +27,7 @@ pipeline {
         }
         stage('DeployIt') {
             steps {
-                echo 'Deploying....'
+                echo 'Deploying (TBD)'
             }
         }
     }
