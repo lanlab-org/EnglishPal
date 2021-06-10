@@ -37,8 +37,7 @@ def test_next():
     
         # get essay content
         driver.save_screenshot('./app/test/test_next_essay_pic0.png')    
-        elem = driver.find_element_by_id('text-content')
-        essay_content = elem.text
+        essay_content = driver.find_elements_by_xpath('/html/body/div/p[3]/font')[0].text
     
         # click Next
         diff = 0
