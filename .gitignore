@@ -10,3 +10,17 @@ app/static/wordfreqapp.db
 app/static/wordfreqapp.sql
 app/static/donate-the-author.jpg
 app/static/donate-the-author-hidden.jpg
+.idea/.gitignore
+.idea/EnglishPal.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+app/.idea/.gitignore
+app/.idea/app.iml
+app/.idea/inspectionProfiles/
+app/.idea/misc.xml
+app/.idea/modules.xml
+app/.idea/vcs.xml
+app/test/.cache/
+/app/static/wordfreqapp.sql
