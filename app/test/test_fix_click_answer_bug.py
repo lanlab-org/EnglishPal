@@ -3,7 +3,7 @@
 # docker run -d -p 4444:4444 selenium/standalone-chrome
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
+from selenium.webdriver import ActionChains
 import random, time
 import string
 
@@ -40,15 +40,8 @@ def test_fix_click_answer_bug():
         assert 'EnglishPal Study Room for ' + uname in driver.title
 
         # get essay content
-        elem = driver.find_element_by_id('text-content')
-        essay_content = elem.text
-
-        elem = driver.find_element_by_id('selected-words')
-        word = random.choice(essay_content.split())
-        while 'font>' in word or 'br>' in word or 'p>' in word or len(word) < 5 or has_punctuation(word):
-            word = random.choice(essay_content.split())
-
-        elem.send_keys(word)
+        elem = driver.find_element_by_xpath("/html/body/div/p[3]/font")
+        ActionChains(driver).double_click(elem).perform()
         #find answer button, and click it twice
         answer = driver.find_element_by_xpath('/html/body/div/button')
         answer.click()
