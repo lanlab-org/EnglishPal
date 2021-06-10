@@ -17,7 +17,7 @@ def has_punctuation(s):
     return [c for c in s if c in string.punctuation] != []
 
 
-def test_add_word():
+def test_fix_click_answer_bug():
     try:
         driver.get(HOME_PAGE)
         assert 'English Pal -' in driver.page_source
