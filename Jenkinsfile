@@ -1,0 +1,37 @@
+pipeline {
+	agent any
+	parameters {
+	    gitParameter branchFilter: 'origin/(.*)', defaultValue: 'SPM-Spring2021-2597-蓝嘉婕201831990605', name: 'BRANCH', type: 'PT_BRANCH'
+	}
+	stages {
+	    stage('Ckeckout') {
+	        steps {
+	            git branch: "${params.BRANCH}", url: 'https://github.com/lanlab-org/EnglishPal.git'
+	        }
+	    }
+        stage('MakeDatabasefile') {
+	        steps {
+	            sh 'touch ./app/static/wordfreqapp.db && rm -f ./app/static/wordfreqapp.db'
+	            sh 'cat ./app/static/wordfreqapp.sql | sqlite3 ./app/static/wordfreqapp.db'
+	        }
+	    }
+        stage('BuildIt') {
+            steps {
+                echo 'Building..'
+		        sh 'sudo docker build -t englishpalljj .'
+		        sh 'sudo docker stop $(docker ps -aq)'
+		        sh 'sudo docker run -d -p 5000:80 -v /var/lib/jenkins/workspace/EnglishPal_Pipeline_master/app/static/frequency:/app/static/frequency -t englishpalljj'
+		    }
+        }
+        stage('TestIt') {
+            steps {
+                echo 'Under Construction....'
+            }
+        }
+        stage('DeployIt') {
+            steps {
+                echo 'Under Construction....'
+            }
+        }
+    }
+}
