@@ -25,7 +25,10 @@ pipeline {
         }
         stage('TestIt') {
             steps {
-                echo 'Under Construction....'
+                sh 'sudo docker run -d -p 4444:4444 selenium/standalone-chrome'
+		        sh 'pip3 install pytest -U -q'
+		        sh 'pip3 install selenium -U -q'
+		        sh 'pytest -v -s --html=EnglishPalTestReport.html ./app/test'
             }
         }
         stage('DeployIt') {
