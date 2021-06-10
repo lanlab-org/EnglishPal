@@ -57,7 +57,7 @@ def test_fix_click_answer_bug():
         elem = driver.find_element_by_xpath('//form[1]//input[1]')  # 找到get所有词频按钮
         elem.click()
 
-        preq = driver.find_element_by_xpath('/html/body/form/p[1]/text()').extract()[2]
-        assert preq == ' (1) '
+        preq = driver.find_element_by_xpath('/html/body/form/p[1]')
+        assert preq.text.split()[2] == '(1)'
     finally:
         driver.quit()
