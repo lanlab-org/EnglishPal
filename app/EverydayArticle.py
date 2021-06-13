@@ -33,9 +33,9 @@ def Get(user_word_list, articleID):
 
     rq = RecordQuery(sql.path_prefix + 'static/wordfreqapp.db')
     if articleID == None:
-        rq.instructions("SELECT * FROM articles")
+        rq.instructions("SELECT * FROM article")
     else:
-        rq.instructions('SELECT * FROM articles WHERE article_id=%d' % (articleID))
+        rq.instructions('SELECT * FROM article WHERE article_id=%d' % (articleID))
     rq.do()
     result = rq.get_results()
 

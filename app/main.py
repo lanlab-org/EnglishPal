@@ -115,6 +115,68 @@ def mainpage():
         return render_template('homepage.html', user=user,random_ads=random_ads,youdao=youdao,Eword=Eword,EwordNum=EwordNum,xi=xi)
 
 
+
+
+@app.route("/<username>/search", methods=['GET', 'POST'])
+def user_others(username):
+    username = session.get('username')
+    if request.method == 'POST':  # when we submit a form
+        page = '<meta charset="UTF8">\n'
+        page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />\n'
+        page += '<meta name="format-detection" content="telephone=no" />\n'  # forbid treating numbers as cell numbers in smart phones
+        page += '<p>所查看用户共同的生词      <a href="/%s">返回</a></p>' % (username)
+        Users = request.form.getlist('usernames')
+        nums = len (Users)
+        result = {}
+
+        for uu in Users:
+            x1=path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % uu
+            d1 = load_freq_history(x1)
+            list1 = pickle_idea2.dict2lst(d1)
+            pickle_idea2.lst2dict2(list1, result)
+        if nums == 1:
+            lst = result
+            # print(type(lst))
+            lst2 = []
+            for t in lst:
+                lst2.append((t, lst[t]))
+            for x in sort_in_descending_order(lst2):
+                word = x[0]
+                freq = x[1]
+                page += '<p class="new-word"> <a href="%s">%s</a> <font color="white">(<a>%d</a>)</font> </p>\n' % (
+                youdao_link(word), word, freq)
+        else:
+            lst = result
+            #print(type(lst))
+            lst2 = []
+            for t in lst:
+                if lst[t] == 1:
+                    continue
+                else:
+                    lst2.append((t, lst[t]))
+            if lst2 == []:
+                page += 'They don\'t have words they don\'t know\n'
+            else:
+                for x in sort_in_descending_order(lst2):
+                    word = x[0]
+                    freq = x[1]
+                    page += '<p class="new-word"> <a href="%s">%s</a> <font color="white">(<a>%d</a>)</font> </p>\n' % (youdao_link(word), word, freq)
+        return page
+
+    if request.method == 'GET':  # when we submit a form
+        lst = sql.get_user()
+        page = '<meta charset="UTF8">'
+        page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />'
+        page += '<p>勾选想要察看的用户     <a href="/%s">返回</a></p>'% (username)
+        page += '<form method="post" action="/%s/search">\n'% (username)
+        page += ' <input type="submit" name="add-btn" value="查看共同的生词"/>\n'
+        count = 1
+        for x in lst:
+            page += '<p><font color="grey">%d</font>: <a>%s</a> <input type="checkbox" name="usernames" value="%s"></p>\n' % (count, x['name'],x['name'])
+            count += 1
+        page += '</form>\n'
+        return page
+
 @app.route("/<username>/mark", methods=['GET', 'POST'])
 def user_mark_word(username):
     username = session[username]
@@ -130,7 +192,6 @@ def user_mark_word(username):
         return redirect(url_for('userpage', username=username))
     else:
         return 'Under construction'
-
 
 @app.route("/<username>", methods=['GET', 'POST'])
 def userpage(username):
@@ -159,7 +220,7 @@ def userpage(username):
         words_tests_dict = pickle_idea.load_record(path_prefix + 'static/words_and_tests.p')
         for x in lst:
             page += '<p><font color="grey">%d</font>: <a href="%s" title="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (
-            count, youdao_link(x[0]), appears_in_test(x[0], words_tests_dict), x[0], x[1], x[0])
+            count, youdao_link(x[0]),  (x[0], words_tests_dict), x[0], x[1], x[0])
             count += 1
         page += '</form>\n'
         return page
@@ -170,6 +231,7 @@ def userpage(username):
         page += '<meta name="format-detection" content="telephone=no" />\n'  # forbid treating numbers as cell numbers in smart phones
         page += '<title>EnglishPal Study Room for %s</title>' % (username)
         page += '<p><b>English Pal for <font color="red">%s</font></b> <a href="/logout">登出</a></p>' % (username)
+        page += '<p><a href="/%s/search">查看其他人的共同生词</a></p>'% (username)
         page += '<p><a href="/%s/reset">下一篇</a></p>' % (username)
         page += '<p><b>阅读文章并回答问题</b></p>\n'
         page += '<div id="text-content">%s</div>' % (today.Get(user_freq_record, session['articleID']))

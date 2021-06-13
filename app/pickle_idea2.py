@@ -25,6 +25,14 @@ def lst2dict(lst, d):
         else:
             d[word] += dates
 
+def lst2dict2(lst1, d):
+    for x in lst1:
+        word = x[0]
+        dates = 1
+        if not word in d:
+            d[word] = dates
+        else:
+            d[word] += dates
 
 def dict2lst(d):
     if len(d) > 0:
