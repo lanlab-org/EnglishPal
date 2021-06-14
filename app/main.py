@@ -330,7 +330,7 @@ def userpage(username):
         page += '      for(var i=0;i<list.length;++i){\n'
         page += '      console.log(list[i]);\n'
         page += '          list[i]=list[i].replace(/(^\s*)|(\s*$)/g, "");\n'
-        page += '          if(list[i]!="")txt=txt.replace(new RegExp(list[i],"g"),"<mark>"+list[i]+"</mark>");\n'
+        page += '          if(list[i]!=""&&"<mark>".indexOf(list[i])==-1&&"</mark>".indexOf(list[i])==-1)txt=txt.replace(new RegExp(list[i],"g"),"<mark>"+list[i]+"</mark>");\n'
         #page += '         while(txt.indexOf(list[i])>-1){\n'
         #page += '          var pos=txt.indexOf(list[i]);\n'
         #page += '          if(pos!=-1){\n'
