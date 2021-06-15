@@ -16,8 +16,8 @@ def test_familiar_unfamiliar():
         elem = driver.find_element_by_link_text('登录')
         elem.click()
 
-        uname = 'hongyi'
-        password = '123456'
+        uname = 'lanhui'
+        password = 'l0ve1t'
         elem = driver.find_element_by_name('username')
         elem.send_keys(uname)
 
