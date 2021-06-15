@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from selenium import webdriver
 import random, time, string
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.CHROME)
 driver.get("http://121.4.94.30:91/")
