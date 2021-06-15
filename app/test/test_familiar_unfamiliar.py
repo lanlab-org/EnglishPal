@@ -49,8 +49,7 @@ def test_familiar_unfamiliar():
         driver.save_screenshot('test_familiar_pic2.png')
         time.sleep(4)
         assert current != now
-
-        driver.refresh()
+        
         # 不熟悉
         elems = driver.find_element_by_class_name('new-word')
         driver.execute_script("arguments[0].scrollIntoView();",elems)
