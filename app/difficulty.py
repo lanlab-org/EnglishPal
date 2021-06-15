@@ -118,7 +118,8 @@ def text_difficulty_level(s, d):
         
     return geometric**(1/max(count,1))
 
-
+def within_range(x, y, r):
+    return x > y and abs(x - y) <= r
 
 if __name__ == '__main__':
 
