@@ -274,12 +274,14 @@ def user_mark_word(username):
 def unfamiliar(username,word):
     user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
     pickle_idea.unfamiliar(user_freq_record,word)
+    session['thisWord'] = word  # 1. put a word into session
     return redirect(url_for('userpage', username=username))
 
 @app.route("/<username>/<word>/familiar", methods=['GET', 'POST'])
 def familiar(username,word):
     user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
     pickle_idea.familiar(user_freq_record,word)
+    session['thisWord'] = word  # 1. put a word into session
     return redirect(url_for('userpage', username=username))
 
 @app.route("/<username>", methods=['GET', 'POST'])
@@ -343,7 +345,13 @@ def userpage(username):
                    document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);
                  </script>
                  '''
-        
+        if session.get('thisWord'):
+            page += '''
+                   <script type="text/javascript">
+                       location.href = "#aaa"  // 2. define a anchor URL and point to the anchor in the page whose id is aaa
+                   </script> 
+                   '''
+
         d = load_freq_history(user_freq_record)
         if len(d) > 0:
             page += '<p><b>我的生词簿</b></p>'
@@ -354,6 +362,8 @@ def userpage(username):
             for x in sort_in_descending_order(lst2):
                 word = x[0]
                 freq = x[1]
+                if session.get('thisWord') == x[0]:
+                    page += '<a name="aaa"></a>'    # 3. anchor
                 if isinstance(d[word], list): # d[word] is a list of dates
                     if freq > 1:
                         page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>) <a href="%s/%s/familiar">熟悉</a> <a href="%s/%s/unfamiliar">不熟悉</a>  </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word,username,word)
