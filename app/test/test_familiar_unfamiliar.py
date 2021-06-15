@@ -2,8 +2,8 @@
 from selenium import webdriver
 import random, time, string
 
-driver = webdriver.Chrome(executable_path="D:\GeckoDriver\chromedriver")
-driver.get("http://127.0.0.1:5000/")
+driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.CHROME)
+driver.get("http://121.4.94.30:91/")
 driver.maximize_window()
 
 
