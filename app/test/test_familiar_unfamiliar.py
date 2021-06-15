@@ -35,28 +35,6 @@ def test_familiar_unfamiliar():
 
         assert 'EnglishPal Study Room for ' + uname in driver.title
 
-        # get essay content
-        # elem = driver.find_element_by_id('text-content')
-        # essay_content = elem.text
-        #
-        # elem = driver.find_element_by_id('selected-words')
-        # word = random.choice(essay_content.split())
-        # while 'font>' in word or 'br>' in word or 'p>' in word or len(word) < 5 or has_punctuation(word):
-        #     word = random.choice(essay_content.split())
-        #
-        # elem.send_keys(word)
-        #
-        # elem = driver.find_element_by_xpath('//form[1]//input[1]')  # 找到get所有词频按钮
-        # elem.click()
-        #
-        # elems = driver.find_elements_by_xpath("//input[@type='checkbox']")
-        # for elem in elems:
-        #     if elem.get_attribute('name') == 'marked':
-        #         elem.click()
-        #
-        # elem = driver.find_element_by_name('add-btn')  # 找到加入我的生词簿按钮
-        # elem.click()
-
         # 熟悉
         elems = driver.find_element_by_class_name('new-word')
         driver.execute_script("arguments[0].scrollIntoView();",elems)
@@ -89,6 +67,3 @@ def test_familiar_unfamiliar():
 
     finally:
         driver.quit()
-
-
-#test_familiar_unfamiliar()
