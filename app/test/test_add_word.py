@@ -57,7 +57,7 @@ def test_add_word():
             if elem.get_attribute('name') == 'marked':
                 elem.click()
     
-        elem = driver.find_element_by_name('add-btn') # 找到加入我的生词簿按钮
+        elem = driver.find_element_by_xpath('//form[1]/input[1]') # 找到加入我的生词簿按钮
         elem.click()
 
         driver.refresh()
