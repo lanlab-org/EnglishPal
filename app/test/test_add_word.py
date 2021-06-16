@@ -70,5 +70,10 @@ def test_add_word():
                 break
 
         assert found == 1
+        
+        #logout
+        elem = driver.find_element_by_link_text("登出")
+        elem.click()
+        
     finally:
         driver.quit()
