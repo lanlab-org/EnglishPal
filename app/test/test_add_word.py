@@ -61,8 +61,6 @@ def test_add_word():
         elem = driver.find_element_by_name('add-btn')  # 找到加入我的生词簿按钮
         elem.click()
 
-        driver.refresh()
-
         elems = driver.find_elements_by_xpath("//p[@class='new-word']/a")
 
         found = 0
