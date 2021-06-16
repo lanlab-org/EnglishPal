@@ -62,8 +62,7 @@ def test_add_word():
         elem.click()
 
         driver.refresh()
-        driver.refresh()
-        driver.refresh()
+
         elems = driver.find_elements_by_xpath("//p[@class='new-word']/a")
 
         found = 0
