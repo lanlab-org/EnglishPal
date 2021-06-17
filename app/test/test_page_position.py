@@ -15,7 +15,7 @@ driver.implicitly_wait(10)
 HOME_PAGE = 'http://121.4.94.30:91/'
 
 
-def test_by_random(text):
+def click_by_random(text):
     elements = driver.find_elements_by_link_text(text)  # 点击单词表中的第一个单词的熟悉按钮
     elements[randint(0, len(elements) - 1)].click()
     try:
@@ -47,13 +47,13 @@ def test_page_position():
         driver.find_element_by_xpath('//form[1]/p[3]/input[1]').click()  # 找到登录按钮
 
         # 这里随机测试三个单词，点击熟悉
-        test_by_random('熟悉')
-        test_by_random('熟悉')
-        test_by_random('熟悉')
+        click_by_random('熟悉')
+        click_by_random('熟悉')
+        click_by_random('熟悉')
         # 这里随机测试三个单词，点击不熟悉
-        test_by_random('不熟悉')
-        test_by_random('不熟悉')
-        test_by_random('不熟悉')
+        click_by_random('不熟悉')
+        click_by_random('不熟悉')
+        click_by_random('不熟悉')
 
     finally:
         driver.quit()
