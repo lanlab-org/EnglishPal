@@ -75,7 +75,7 @@ def within_range(x, y, r):
 
 
 def get_today_article(user_word_list, articleID):
-
+    
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
     if articleID == None:    
         rq.instructions("SELECT * FROM article")

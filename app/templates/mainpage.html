@@ -21,7 +21,7 @@
       <input type="reset" value="清除"/>
     </form>
 <p><b>最常见的词</b></p>
-<div style="margin-left: 5px; margin-right: 5px; padding: 5px; border-left: 1px solid rgba(0, 0, 0, 0.5); border-right: 1px solid rgba(0, 0, 0, 0.5);">
+<div style="margin-left: 5px; margin-right: 5px; padding: 5px;">
 {% for i in range(word) %}
     <a style="padding: 5px;" href="{{youdao[i]}}">{{getWord[i]}}</a> {{getwordNum[i]}}
 {% endfor %}
