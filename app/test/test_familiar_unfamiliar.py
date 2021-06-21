@@ -33,7 +33,7 @@ def test_familiar_unfamiliar():
         elems = driver.find_element_by_class_name('new-word')
         driver.execute_script("arguments[0].scrollIntoView();",elems)
         current = elems.text
-        time.sleep(4)
+
         driver.save_screenshot('test_familiar_pic1.png')
         elem = driver.find_element_by_link_text('熟悉')
         elem.click()
@@ -41,7 +41,7 @@ def test_familiar_unfamiliar():
         now = elems.text
         driver.execute_script("arguments[0].scrollIntoView();",elems)
         driver.save_screenshot('test_familiar_pic2.png')
-        time.sleep(4)
+
         assert current != now
         
         # 不熟悉
@@ -55,7 +55,7 @@ def test_familiar_unfamiliar():
         driver.execute_script("arguments[0].scrollIntoView();",elems)
         driver.save_screenshot('test_unfamiliar_pic2.png')
         now_2 = elems.text
-        time.sleep(4)
+
         assert current_2 != now_2
 
     finally:
