@@ -1,4 +1,5 @@
 venv/
+docs/
 app/__init__.py
 app/__pycache__/
 app/sqlite_commands.py
