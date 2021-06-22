@@ -26,8 +26,8 @@ def test_add_word():
         elem = driver.find_element_by_link_text('登录')
         elem.click()
 
-        uname = 'lanhui'
-        password = 'l0ve1t'
+        uname = 'zwq'
+        password = '123456'
         elem = driver.find_element_by_name('username')
         elem.send_keys(uname)
 
