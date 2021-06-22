@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+        <title>EnglishPal 英文单词高效记</title>
+    </head>
+<body>
+    <p><b><font size="+3" color="red">English Pal - Learn English in a smart way!</font></b></p>
+    {% if username %}
+        <a href="user">user</a></p>
+    {% else %}
+        <p><a href="/login">登录</a>  <a href="/signup">成为会员</a> <a href="/static/usr/instructions.html">使用说明</a></p>
+    {% endif %}
+    <p><b>{{random_ads}}<a href="/signup">试试吧</a></b></p>
+        <p>粘帖1篇文章 (English only)</p>
+        <form method="post" action="/">
+          <textarea name="content" rows="10" cols="120"></textarea><br/>
+          <input type="submit" value="get文章中的词频"/>
+          <input type="reset" value="清除"/>
+        </form>
+    <p><b>最常见的词</b></p>
+    {% for i in range(x) %}
+        <a href="{{youdao[i]}}">{{word[i]}}</a> {{num[i]}}
+    {% endfor %}
+</body>
+</html>

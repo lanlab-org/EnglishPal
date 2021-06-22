@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>勾选不认识的单词</p>
+<form method="post" action="/{{username}}/mark">
+    <input type="submit" name="add-btn" value="加入我的生词簿"/>
+    {% for i in range(x): %}
+    <p><font color="grey">{{i+1}}</font>: <a href="{{youdao[i]}}">{{word[i]}}</a> {{num[i]}}  <input type="checkbox" name="marked" value="{{word[i]}}"></p>
+    {% endfor %}
+
+</form>
+</body>
+</html>

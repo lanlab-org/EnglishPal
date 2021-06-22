@@ -45,6 +45,15 @@ def merge_frequency(lst1, lst2):
     lst2dict(lst2, d)
     return d
 
+def deleteRecord(path,word):
+    with open(path, 'rb') as f:
+        db = pickle.load(f)
+    try:
+        db.pop(word)
+    except KeyError:
+        print("sorry")
+    with open(path, 'wb') as ff:
+            pickle.dump(db, ff)
 
 def load_record(pickle_fname):
     f = open(pickle_fname, 'rb')

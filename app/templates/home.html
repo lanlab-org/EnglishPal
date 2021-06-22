@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="/mark">
+    {% for i in range(x): %}
+    <p><font color="grey">{{i+1}}</font>: <a href="{{youdao[i]}}">{{word[i]}}</a> {{num[i]}}  <input type="checkbox" name="marked" value="{{word[i]}}"></p>
+    {% endfor %}
+    <input type="submit" value="确定并返回"/>
+</form>
+</body>
+</html>
