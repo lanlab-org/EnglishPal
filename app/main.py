@@ -318,6 +318,17 @@ def user_mark_word(username):
         return 'Under construction'
 
 
+@app.route("/<username>/<word>/unfamiliar", methods=['GET', 'POST'])
+def unfamiliar(username,word):
+    user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
+    pickle_idea.unfamiliar(user_freq_record,word)
+    return redirect(url_for('userpage', username=username))
+
+@app.route("/<username>/<word>/familiar", methods=['GET', 'POST'])
+def familiar(username,word):
+    user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
+    pickle_idea.familiar(user_freq_record,word)
+    return redirect(url_for('userpage', username=username))
 
 @app.route("/<username>", methods=['GET', 'POST'])
 def userpage(username):
@@ -393,13 +404,11 @@ def userpage(username):
                 freq = x[1]
                 if isinstance(d[word], list): # d[word] is a list of dates
                     if freq > 1:
-                        page += '<p class="new-word"> <a href="%s">%s</a>                     (<a title="%s">%d</a>) </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq)
+                        page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>) <a href="%s/%s/familiar">熟悉</a> <a href="%s/%s/unfamiliar">不熟悉</a>  </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word,username,word)
                     else:
-                        page += '<p class="new-word"> <a href="%s">%s</a> <font color="white">(<a title="%s">%d</a>)</font> </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq)
+                        page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>) <a href="%s/%s/familiar">熟悉</a> <a href="%s/%s/unfamiliar">不熟悉</a>   </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word,username,word)
                 elif isinstance(d[word], int): # d[word] is a frequency. to migrate from old format.
-                    page += '<a href="%s">%s</a>%d\n' % (youdao_link(word), word, freq)                    
-                    
-                
+                    page += '<a href="%s">%s</a>%d\n' % (youdao_link(word), word, freq)
         return page
 
 ### Sign-up, login, logout ###
