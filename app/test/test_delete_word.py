@@ -28,7 +28,7 @@ def test_delete_word():
         elem.click()
 
         uname = 'lanhui'
-        password = '123456'
+        password = 'l0ve1t'
         elem = driver.find_element_by_name('username')
         elem.send_keys(uname)
 
