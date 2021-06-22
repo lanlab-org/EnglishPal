@@ -7,6 +7,7 @@
 # Task: incorporate the functions into wordfreqCMD.py such that it will also show cumulative frequency.
 
 import pickle
+from datetime import datetime
 
 
 def lst2dict(lst, d):
@@ -53,7 +54,22 @@ def save_frequency_to_pickle(d, pickle_fname):
     pickle.dump(d2, f)
     f.close()
 
+def unfamiliar(path,word):
+    f = open(path,"rb")
+    dic = pickle.load(f)
+    dic[word] += [datetime.now().strftime('%Y%m%d%H%M')]
+    fp = open(path,"wb")
+    pickle.dump(dic,fp)
 
+def familiar(path,word):
+    f = open(path,"rb")
+    dic = pickle.load(f)
+    if len(dic[word])>1:
+        del dic[word][0]
+    else:
+        dic.pop(word)
+    fp = open(path,"wb")
+    pickle.dump(dic,fp)
 
 if __name__ == '__main__':
 
