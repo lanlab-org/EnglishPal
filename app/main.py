@@ -156,6 +156,7 @@ def get_answer_part(s):
 <script type="text/javascript">
 
     function toggle_visibility(id) {
+       window.getSelection().empty()
        var e = document.getElementById(id);
        if(e.style.display == 'block')
           e.style.display = 'none';

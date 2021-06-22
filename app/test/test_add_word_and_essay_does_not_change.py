@@ -40,13 +40,14 @@ def test_add_word_and_essay_does_not_change():
     
         # get essay content
         driver.save_screenshot('./app/test/test_add_word_and_essay_does_not_change_pic0.png')    
+        article_content = driver.find_elements_by_xpath('/html/body/div/p[3]/font')[0].text
         elem = driver.find_element_by_id('text-content')
         essay_content = elem.text
-    
+        
         elem = driver.find_element_by_id('selected-words')
-        word = random.choice(essay_content.split())
+        word = random.choice(article_content.split())
         while 'font>' in word or 'br>' in word or 'p>' in word or len(word) < 5 or has_punctuation(word):
-            word = random.choice(essay_content.split())        
+            word = random.choice(article_content.split())        
         elem.send_keys(word)
         elem = driver.find_element_by_xpath('//form[1]//input[1]') # 找到get所有词频按钮
         elem.click()

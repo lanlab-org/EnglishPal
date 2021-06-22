@@ -39,8 +39,7 @@ def test_add_word():
         assert 'EnglishPal Study Room for ' + uname in  driver.title
     
         # get essay content
-        elem = driver.find_element_by_id('text-content')
-        essay_content = elem.text
+        essay_content = driver.find_elements_by_xpath('/html/body/div/p[3]/font')[0].text
     
         elem = driver.find_element_by_id('selected-words')
         word = random.choice(essay_content.split())
