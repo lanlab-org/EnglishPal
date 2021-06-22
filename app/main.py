@@ -228,7 +228,7 @@ def mainpage():
                </head>
                <body>
         '''
-        page += '<p><b><font size="+3" color="red">English Pal - Learn English in a smart way!</font></b></p>'
+        page += '<p><b><font size="+3" color="red">English Pal(SPM-Spring2021-2599-张小飞201831990641) - Learn English in a smart way!</font></b></p>'
         if session.get('logged_in'):
             page += ' <a href="%s">%s</a></p>\n' % (session['username'], session['username'])
         else:
