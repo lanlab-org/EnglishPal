@@ -1,0 +1,7 @@
+{% block body %}
+<meta charset="UTF8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+<p>勾选不认识的单词</p>
+<form method="post" action="/{{username}}/mark">
+<input type="submit" name="add-btn" value="加入我的生词簿"/>
+{% endblock %}
