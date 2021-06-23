@@ -50,7 +50,6 @@ def add_user(username, password):
     rq.instructions("INSERT INTO user Values ('%s', '%s', '%s', '%s')" % (username, password, start_date, expiry_date))
     rq.do()
 
-    
 def check_username_availability(username):
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
     rq.instructions("SELECT * FROM user WHERE name='%s'" % (username))
@@ -68,11 +67,13 @@ def get_expiry_date(username):
     else:
         return '20191024'
     
-
-
 def within_range(x, y, r):
     return x > y and abs(x - y) <= r 
 
+def read_page(txtName):
+    result=[]
+    with open(txtName, 'r',encoding='UTF-8') as f:
+           return f.read()
 
 def get_today_article(user_word_list, articleID):
 
@@ -152,18 +153,7 @@ def get_answer_part(s):
         elif flag == 1:
             result.append(line)
     # https://css-tricks.com/snippets/javascript/showhide-element/
-    js = '''
-<script type="text/javascript">
-
-    function toggle_visibility(id) {
-       var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
-    }
-</script>   
-    '''
+    js=read_page('javaScript.txt')
     html_code = js
     html_code += '\n'
     html_code += '<button onclick="toggle_visibility(\'answer\');">ANSWER</button>\n'
@@ -218,16 +208,7 @@ def mainpage():
         
         return page
     elif request.method == 'GET': # when we load a html page
-        page = '''
-             <html lang="zh">
-               <head>
-               <meta charset="utf-8">
-               <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
-                 <title>EnglishPal 英文单词高效记</title>
-
-               </head>
-               <body>
-        '''
+        page = read_page('mainPage1.txt')
         page += '<p><b><font size="+3" color="red">English Pal - Learn English in a smart way!</font></b></p>'
         if session.get('logged_in'):
             page += ' <a href="%s">%s</a></p>\n' % (session['username'], session['username'])
@@ -235,12 +216,7 @@ def mainpage():
             page += '<p><a href="/login">登录</a>  <a href="/signup">成为会员</a> <a href="/static/usr/instructions.html">使用说明</a></p>\n'
         #page += '<p><img src="%s" width="400px" alt="advertisement"/></p>' % (get_random_image(path_prefix + 'static/img/'))
         page += '<p><b>%s</b></p>' % (get_random_ads())
-        page += '<p>粘帖1篇文章 (English only)</p>'
-        page += '<form method="post" action="/">'
-        page += ' <textarea name="content" rows="10" cols="120"></textarea><br/>'
-        page += ' <input type="submit" value="get文章中的词频"/>'
-        page += ' <input type="reset" value="清除"/>'
-        page += '</form>'
+        page += read_page('mainPage2.txt')
         d = load_freq_history(path_prefix + 'static/frequency/frequency.p')
         if len(d) > 0:
             page += '<p><b>最常见的词</b></p>'
@@ -314,41 +290,7 @@ def userpage(username):
         page += '<div id="text-content">%s</div>'  % (get_today_article(user_freq_record, session['articleID']))
         page += '<p><b>收集生词吧</b> （可以在正文中划词，也可以复制黏贴）</p>'
         page += '<form method="post" action="/%s">' % (username)
-        page += ' <textarea name="content" id="selected-words" rows="10" cols="120"></textarea><br/>'
-        page += ' <input type="submit" value="get 所有词的频率"/>'
-        page += ' <input type="reset" value="清除"/>'
-        page += '</form>\n'
-        page += '<script type="text/javascript">'
-        page += '   function getWord(){ \n'
-        page += '      var word = window.getSelection?window.getSelection():document.selection.createRange().text;\n'
-        page += '      return word;\n'
-        page += '   }\n'
-        page += '   function highLight(){ \n'
-        page += '      var txt=document.getElementById("article").innerText\n'
-        page += '      var list=document.getElementById("selected-words").value.split(" ");\n'
-        page += '      console.log(list.length);\n'
-        page += '      for(var i=0;i<list.length;++i){\n'
-        page += '      console.log(list[i]);\n'
-        page += '          list[i]=list[i].replace(/(^\s*)|(\s*$)/g, "");\n'
-        page += '          if(list[i]!=""&&"<mark>".indexOf(list[i])==-1&&"</mark>".indexOf(list[i])==-1)txt=txt.replace(new RegExp(list[i],"g"),"<mark>"+list[i]+"</mark>");\n'
-        #page += '         while(txt.indexOf(list[i])>-1){\n'
-        #page += '          var pos=txt.indexOf(list[i]);\n'
-        #page += '          if(pos!=-1){\n'
-        #page += '              console.log(pos);;\n'
-        #page += '              txt=""+(txt.substring(0,pos)+"<mark>"+list[i]+"</mark>"+txt.substring((pos+list[i].length),txt.length));\n'
-        #page += '           };\n'
-        page += '      }\n'
-        page += '      document.getElementById("article").innerHTML=txt;\n'
-        page += '   }\n'
-        page += '   function fillinWord(){\n'
-        page += '      var element = document.getElementById("selected-words");\n'
-        page += '      element.value = element.value + " " + getWord();\n'
-        page += '      highLight();\n'
-        page += '   }\n'
-        page += '   document.getElementById("text-content").addEventListener("click", fillinWord, false);\n'
-        page += '   document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);\n'
-        page += '   window.setInterval("highLight()", 10000);\n'
-        page += '</script>\n'
+        page += read_page('userPage.txt')
         
         d = load_freq_history(user_freq_record)
         if len(d) > 0:

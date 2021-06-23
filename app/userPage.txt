@@ -1,0 +1,29 @@
+<textarea name="content" id="selected-words" rows="10" cols="120"></textarea><br/>
+<input type="submit" value="get 所有词的频率"/>
+<input type="reset" value="清除"/>
+</form>
+<script type="text/javascript">
+function getWord(){ 
+var word = window.getSelection?window.getSelection():document.selection.createRange().text;
+return word;
+}
+function highLight(){ 
+var txt=document.getElementById("article").innerText
+var list=document.getElementById("selected-words").value.split(" ");
+console.log(list.length);
+for(var i=0;i<list.length;++i){
+console.log(list[i]);
+list[i]=list[i].replace(/(^\s*)|(\s*$)/g, "");
+if(list[i]!=""&&"<mark>".indexOf(list[i])==-1&&"</mark>".indexOf(list[i])==-1)txt=txt.replace(new RegExp(list[i],"g"),"<mark>"+list[i]+"</mark>");
+}
+document.getElementById("article").innerHTML=txt;
+}
+function fillinWord(){
+var element = document.getElementById("selected-words");
+element.value = element.value + " " + getWord();
+highLight();
+}
+document.getElementById("text-content").addEventListener("click", fillinWord, false);
+document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);
+window.setInterval("highLight()", 10000);
+</script>

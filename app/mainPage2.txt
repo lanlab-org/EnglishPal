@@ -1,0 +1,6 @@
+<p>粘帖1篇文章 (English only)</p>
+<form method="post" action="/">
+<textarea name="content" rows="10" cols="120"></textarea><br/>
+<input type="submit" value="get文章中的词频"/>
+<input type="reset" value="清除"/>
+</form>

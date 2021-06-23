@@ -1,0 +1,7 @@
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+<title>EnglishPal 英文单词高效记</title>
+</head>
+<body>
