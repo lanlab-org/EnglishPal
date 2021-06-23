@@ -15,19 +15,6 @@ path_prefix = '/var/www/wordfreq/wordfreq/'
 path_prefix = './'  # comment this line in deployment
 
 class Sql:
-    def get_random_image(path):
-        img_path = random.choice(glob.glob(os.path.join(path, '*.jpg')))
-        return img_path[img_path.rfind('/static'):]
-
-    def get_random_ads():
-        ads = random.choice(['个性化分析精准提升', '你的专有单词本', '智能捕捉阅读弱点，针对性提高你的阅读水平'])
-        return ads + '。 <a href="/signup">试试</a>吧！'
-
-    def load_freq_history(path):
-        d = {}
-        if os.path.exists(path):
-            d = pickle_idea.load_record(path)
-        return d
 
     def verify_user(username, password):
         rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')

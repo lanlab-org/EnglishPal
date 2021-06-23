@@ -27,12 +27,12 @@ class Method:
         result = rq.get_results()
 
         # Choose article according to reader's level
-        d1 = Sql.load_freq_history(path_prefix + 'static/frequency/frequency.p')
-        d2 = Sql.load_freq_history(path_prefix + 'static/words_and_tests.p')
+        d1 = Method.load_freq_history(path_prefix + 'static/frequency/frequency.p')
+        d2 = Method.load_freq_history(path_prefix + 'static/words_and_tests.p')
         d3 = get_difficulty_level(d1, d2)
 
         d = {}
-        d_user = Sql.load_freq_history(user_word_list)
+        d_user = Method.load_freq_history(user_word_list)
         user_level = user_difficulty_level(d_user,
                                            d3)  # more consideration as user's behaviour is dynamic. Time factor should be considered.
         random.shuffle(result)  # shuffle list
@@ -109,3 +109,16 @@ class Method:
         html_code += '<button onclick="toggle_visibility(\'answer\');">ANSWER</button>\n'
         html_code += '<div id="answer" style="display:none;">%s</div>\n' % ('\n'.join(result))
         return html_code
+    def get_random_image(path):
+        img_path = random.choice(glob.glob(os.path.join(path, '*.jpg')))
+        return img_path[img_path.rfind('/static'):]
+
+    def get_random_ads():
+        ads = random.choice(['个性化分析精准提升', '你的专有单词本', '智能捕捉阅读弱点，针对性提高你的阅读水平'])
+        return ads + '。 <a href="/signup">试试</a>吧！'
+
+    def load_freq_history(path):
+        d = {}
+        if os.path.exists(path):
+            d = pickle_idea.load_record(path)
+        return d

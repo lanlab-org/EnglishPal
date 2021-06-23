@@ -97,7 +97,7 @@ def user_mark_word(username):
     username = session[username]
     user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
     if request.method == 'POST':
-        d = Sql.load_freq_history(user_freq_record)
+        d = Method.load_freq_history(user_freq_record)
         lst_history = pickle_idea2.dict2lst(d)
         lst = []
         for word in request.form.getlist('marked'):
@@ -192,7 +192,7 @@ def userpage(username):
                  </script>
                  '''
 
-        d = Sql.load_freq_history(user_freq_record)
+        d = Method.load_freq_history(user_freq_record)
         if len(d) > 0:
             page += '<p><b>我的生词簿</b></p>'
             lst = pickle_idea2.dict2lst(d)
