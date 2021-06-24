@@ -301,19 +301,10 @@ def userpage(username):
         content = request.form['content']
         f = WordFreq(content)
         lst = f.get_freq()
-        page = '<meta charset="UTF8">'        
-        page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />'        
-        page += '<p>勾选不认识的单词</p>'
-        page += '<form method="post" action="/%s/mark">\n' % (username)
-        page += ' <input type="submit" name="add-btn" value="加入我的生词簿"/>\n'        
-        count = 1
-        words_tests_dict = pickle_idea.load_record(path_prefix + 'static/words_and_tests.p')        
-        for x in lst:
-            page += '<p><font color="grey">%d</font>: <a href="%s" title="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (count, youdao_link(x[0]), appears_in_test(x[0], words_tests_dict), x[0], x[1], x[0])
-            count += 1
-        page += '</form>\n'
-        return page
-    
+        words_tests_dict = pickle_idea.load_record(path_prefix + 'static/words_and_tests.p')
+        print(words_tests_dict['whopping'])
+        return render_template('check_and_add_selected_words.html', username=username, f=f, lst=lst, words_tests_dict=words_tests_dict)
+
     elif request.method == 'GET': # when we load a html page
         page = '<meta charset="UTF8">\n'
         page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />\n'

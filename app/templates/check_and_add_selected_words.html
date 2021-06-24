@@ -1,0 +1,21 @@
+{% block body %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+
+    <p>勾选不认识的单词</p>
+    <form method="post" action="/{{ username }}/mark">
+        <input type="submit" name="add-btn" value="加入我的生词簿"/><br/>
+        {% for x in lst %}
+        <p style="color: grey">
+            <span color="grey">{{ lst.index(x)+1 }}</span>:
+            {% if not x[0] in words_tests_dict %}
+        <a href="http://youdao.com/w/eng/{{ x[0] }}/#keyfrom=dict2.index" title=" ">{{ x[0] }}</a>
+            {% else %}
+        <a href="http://youdao.com/w/eng/{{ x[0] }}/#keyfrom=dict2.index" title="{{ ','.join(words_tests_dict[x[0]]) }}">{{ x[0] }}</a>
+            {% endif %}
+        <span>({{ x[1] }})</span>
+        <input type="checkbox" name="marked" value="{{ x[0] }}"><br/>
+{#            {% count += 1 %}#}
+        {% endfor %}
+    </form>
+{% endblock %}
