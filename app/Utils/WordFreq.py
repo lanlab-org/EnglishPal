@@ -3,7 +3,7 @@
 # Written permission must be obtained from the author for commercial uses.
 ###########################################################################
 
-from wordfreqCMD import remove_punctuation, freq, sort_in_descending_order
+from app.Utils.wordfreqCMD import remove_punctuation, freq, sort_in_descending_order
 import string
 
 class WordFreq:

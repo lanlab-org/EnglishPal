@@ -7,7 +7,7 @@
 
 import pickle
 import math
-from wordfreqCMD import remove_punctuation, freq, sort_in_descending_order, sort_in_ascending_order
+from app.Utils.wordfreqCMD import remove_punctuation, freq, sort_in_descending_order, sort_in_ascending_order
 
 
 def load_record(pickle_fname):
