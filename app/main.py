@@ -20,21 +20,25 @@ app = Flask(__name__)
 app.secret_key = 'lunch.time!'
 
 path_prefix = '/var/www/wordfreq/wordfreq/'
-path_prefix = './' # comment this line in deployment
+path_prefix = './'  # comment this line in deployment
+
 
 def get_random_image(path):
     img_path = random.choice(glob.glob(os.path.join(path, '*.jpg')))
     return img_path[img_path.rfind('/static'):]
 
+
 def get_random_ads():
     ads = random.choice(['个性化分析精准提升', '你的专有单词本', '智能捕捉阅读弱点，针对性提高你的阅读水平'])
-    return ads + '。 <a href="/signup">试试</a>吧！'
+    return ads + '。 '
+
 
 def load_freq_history(path):
     d = {}
     if os.path.exists(path):
         d = pickle_idea.load_record(path)
     return d
+
 
 def verify_user(username, password):
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
@@ -43,6 +47,7 @@ def verify_user(username, password):
     result = rq.get_results()
     return result != []
 
+
 def add_user(username, password):
     start_date = datetime.now().strftime('%Y%m%d')
     expiry_date = '20211230'
@@ -50,13 +55,14 @@ def add_user(username, password):
     rq.instructions("INSERT INTO user Values ('%s', '%s', '%s', '%s')" % (username, password, start_date, expiry_date))
     rq.do()
 
-    
+
 def check_username_availability(username):
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
     rq.instructions("SELECT * FROM user WHERE name='%s'" % (username))
     rq.do()
     result = rq.get_results()
-    return  result == []
+    return result == []
+
 
 def get_expiry_date(username):
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
@@ -64,26 +70,24 @@ def get_expiry_date(username):
     rq.do()
     result = rq.get_results()
     if len(result) > 0:
-        return  result[0]['expiry_date']
+        return result[0]['expiry_date']
     else:
         return '20191024'
-    
 
 
 def within_range(x, y, r):
-    return x > y and abs(x - y) <= r 
+    return x > y and abs(x - y) <= r
 
 
 def get_today_article(user_word_list, articleID):
-
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
-    if articleID == None:    
+    if articleID == None:
         rq.instructions("SELECT * FROM article")
     else:
         rq.instructions('SELECT * FROM article WHERE article_id=%d' % (articleID))
     rq.do()
     result = rq.get_results()
-    
+
     # Choose article according to reader's level
     d1 = load_freq_history(path_prefix + 'static/frequency/frequency.p')
     d2 = load_freq_history(path_prefix + 'static/words_and_tests.p')
@@ -91,24 +95,26 @@ def get_today_article(user_word_list, articleID):
 
     d = {}
     d_user = load_freq_history(user_word_list)
-    user_level = user_difficulty_level(d_user, d3) # more consideration as user's behaviour is dynamic. Time factor should be considered.
-    random.shuffle(result) # shuffle list
+    user_level = user_difficulty_level(d_user,
+                                       d3)  # more consideration as user's behaviour is dynamic. Time factor should be considered.
+    random.shuffle(result)  # shuffle list
     d = random.choice(result)
     text_level = text_difficulty_level(d['text'], d3)
     if articleID == None:
         for reading in result:
             text_level = text_difficulty_level(reading['text'], d3)
-            #print('TEXT_LEVEL %4.2f' % (text_level))
+            # print('TEXT_LEVEL %4.2f' % (text_level))
             if within_range(text_level, user_level, 0.5):
                 d = reading
                 break
-            
-    s = '<p><i>According to your word list, your level is <b>%4.2f</b> and we have chosen an article with a difficulty level of <b>%4.2f</b> for you.</i></p>' % (user_level, text_level)
+
+    s = '<p><i>According to your word list, your level is <b>%4.2f</b> and we have chosen an article with a difficulty level of <b>%4.2f</b> for you.</i></p>' % (
+    user_level, text_level)
     s += '<p><b>%s</b></p>' % (d['date'])
     s += '<p><font size=+2>%s</font></p>' % (d['text'])
     s += '<p><i>%s</i></p>' % (d['source'])
     s += '<p><b>%s</b></p>' % (get_question_part(d['question']))
-    s = s.replace('\n', '<br/>')    
+    s = s.replace('\n', '<br/>')
     s += '%s' % (get_answer_part(d['question']))
     session['articleID'] = d['article_id']
     return s
@@ -122,7 +128,7 @@ def appears_in_test(word, d):
 
 
 def get_time():
-    return datetime.now().strftime('%Y%m%d%H%M') # upper to minutes
+    return datetime.now().strftime('%Y%m%d%H%M')  # upper to minutes
 
 
 def get_question_part(s):
@@ -171,7 +177,6 @@ def get_answer_part(s):
     return html_code
 
 
-
 @app.route("/<username>/reset", methods=['GET', 'POST'])
 def user_reset(username):
     if request.method == 'GET':
@@ -196,7 +201,6 @@ def mark_word():
         return 'Under construction'
 
 
-
 @app.route("/", methods=['GET', 'POST'])
 def mainpage():
     if request.method == 'POST':  # when we submit a form
@@ -206,57 +210,50 @@ def mainpage():
         page = '<form method="post" action="/mark">\n'
         count = 1
         for x in lst:
-            page += '<p><font color="grey">%d</font>: <a href="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (count, youdao_link(x[0]), x[0], x[1], x[0])
+            page += '<p><font color="grey">%d</font>: <a href="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (
+                count, youdao_link(x[0]), x[0], x[1], x[0])
             count += 1
         page += ' <input type="submit" value="确定并返回"/>\n'
         page += '</form>\n'
-        # save history 
+        # save history
         d = load_freq_history(path_prefix + 'static/frequency/frequency.p')
         lst_history = pickle_idea.dict2lst(d)
         d = pickle_idea.merge_frequency(lst, lst_history)
         pickle_idea.save_frequency_to_pickle(d, path_prefix + 'static/frequency/frequency.p')
-        
-        return page
-    elif request.method == 'GET': # when we load a html page
-        page = '''
-             <html lang="zh">
-               <head>
-               <meta charset="utf-8">
-               <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
-                 <title>EnglishPal 英文单词高效记</title>
 
-               </head>
-               <body>
-        '''
-        page += '<p><b><font size="+3" color="red">English Pal - Learn English in a smart way!</font></b></p>'
+        return page
+    elif request.method == 'GET':  # when we load a html page
+        username = ''
+        youdao = {}
+        word = {}
+        num = {}
         if session.get('logged_in'):
-            page += ' <a href="%s">%s</a></p>\n' % (session['username'], session['username'])
-        else:
-            page += '<p><a href="/login">登录</a>  <a href="/signup">成为会员</a> <a href="/static/usr/instructions.html">使用说明</a></p>\n'
-        #page += '<p><img src="%s" width="400px" alt="advertisement"/></p>' % (get_random_image(path_prefix + 'static/img/'))
-        page += '<p><b>%s</b></p>' % (get_random_ads())
-        page += '<p>粘帖1篇文章 (English only)</p>'
-        page += '<form method="post" action="/">'
-        page += ' <textarea name="content" rows="10" cols="120"></textarea><br/>'
-        page += ' <input type="submit" value="get文章中的词频"/>'
-        page += ' <input type="reset" value="清除"/>'
-        page += '</form>'
+            username = session['username']
         d = load_freq_history(path_prefix + 'static/frequency/frequency.p')
+        n = 1
         if len(d) > 0:
-            page += '<p><b>最常见的词</b></p>'
             for x in sort_in_descending_order(pickle_idea.dict2lst(d)):
-                if x[1] <= 99:
-                    break
-                page += '<a href="%s">%s</a> %d\n' % (youdao_link(x[0]), x[0], x[1])
+                youdao[n] = youdao_link(x[0])
+                word[n] = x[0]
+                num[n] = x[1]
+                n = n + 1
+        parameter = {
+            'isLog_in': session.get('logged_in'),
+             'username': username,
+             'random_ads': get_random_ads(),
+             'youdao': youdao,
+             'words': word,
+              'num': num,
+              'n': n
+        }
+        return render_template('home.html', parameter=parameter)
 
-        page += '</body></html>'
-        return page
 
 
 @app.route("/<username>/mark", methods=['GET', 'POST'])
 def user_mark_word(username):
     username = session[username]
-    user_freq_record = path_prefix + 'static/frequency/' +  'frequency_%s.pickle' % (username)
+    user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
     if request.method == 'POST':
         d = load_freq_history(user_freq_record)
         lst_history = pickle_idea2.dict2lst(d)
@@ -270,59 +267,49 @@ def user_mark_word(username):
         return 'Under construction'
 
 
-@app.route("/<username>/<word>/unfamiliar", methods=['GET', 'POST'])
-def unfamiliar(username,word):
-    user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
-    pickle_idea.unfamiliar(user_freq_record,word)
-    return redirect(url_for('userpage', username=username))
-
-@app.route("/<username>/<word>/familiar", methods=['GET', 'POST'])
-def familiar(username,word):
-    user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
-    pickle_idea.familiar(user_freq_record,word)
-    return redirect(url_for('userpage', username=username))
-
 @app.route("/<username>", methods=['GET', 'POST'])
 def userpage(username):
-    
     if not session.get('logged_in'):
         return '<p>请先<a href="/login">登录</a>。</p>'
 
     user_expiry_date = session.get('expiry_date')
     if datetime.now().strftime('%Y%m%d') > user_expiry_date:
-        return '<p>账号 %s 过期。</p><p>为了提高服务质量，English Pal 收取会员费用， 每天0元。</p> <p>请决定你要试用的时间长度，扫描下面支付宝二维码支付。 支付时请注明<i>English Pal Membership Fee</i>。 我们会于12小时内激活账号。</p><p><img src="static/donate-the-author-hidden.jpg" width="120px" alt="支付宝二维码" /></p><p>如果有问题，请加开发者微信 torontohui。</p> <p><a href="/logout">登出</a></p>' % (username)
+        return '<p>账号 %s 过期。</p><p>为了提高服务质量，English Pal 收取会员费用， 每天0元。</p> <p>请决定你要试用的时间长度，扫描下面支付宝二维码支付。 支付时请注明<i>English Pal Membership Fee</i>。 我们会于12小时内激活账号。</p><p><img src="static/donate-the-author-hidden.jpg" width="120px" alt="支付宝二维码" /></p><p>如果有问题，请加开发者微信 torontohui。</p> <p><a href="/logout">登出</a></p>' % (
+            username)
 
-    
     username = session.get('username')
 
-    user_freq_record = path_prefix + 'static/frequency/' +  'frequency_%s.pickle' % (username)
-    
+    user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
+
     if request.method == 'POST':  # when we submit a form
         content = request.form['content']
         f = WordFreq(content)
         lst = f.get_freq()
-        page = '<meta charset="UTF8">'        
-        page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />'        
+        page = '<meta charset="UTF8">'
+        page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />'
         page += '<p>勾选不认识的单词</p>'
         page += '<form method="post" action="/%s/mark">\n' % (username)
-        page += ' <input type="submit" name="add-btn" value="加入我的生词簿"/>\n'        
+        page += ' <input type="submit" name="add-btn" value="加入我的生词簿"/>\n'
         count = 1
-        words_tests_dict = pickle_idea.load_record(path_prefix + 'static/words_and_tests.p')        
+        words_tests_dict = pickle_idea.load_record(path_prefix + 'static/words_and_tests.p')
         for x in lst:
-            page += '<p><font color="grey">%d</font>: <a href="%s" title="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (count, youdao_link(x[0]), appears_in_test(x[0], words_tests_dict), x[0], x[1], x[0])
+            page += '<p><font color="grey">%d</font>: <a href="%s" title="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (
+            count, youdao_link(x[0]), appears_in_test(x[0], words_tests_dict), x[0], x[1], x[0])
             count += 1
         page += '</form>\n'
         return page
-    
-    elif request.method == 'GET': # when we load a html page
+
+    elif request.method == 'GET':  # when we load a html page
         page = '<meta charset="UTF8">\n'
         page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />\n'
-        page += '<meta name="format-detection" content="telephone=no" />\n' # forbid treating numbers as cell numbers in smart phones
+        page += '<meta name="format-detection" content="telephone=no" />\n'
+        # forbid treating numbers as cell numbers in smart phones
         page += '<title>EnglishPal Study Room for %s</title>' % (username)
         page += '<p><b>English Pal for <font color="red">%s</font></b> <a href="/logout">登出</a></p>' % (username)
+        page += '<p><a href="#myWords">背生词</a></p>'
         page += '<p><a href="/%s/reset">下一篇</a></p>' % (username)
         page += '<p><b>阅读文章并回答问题</b></p>\n'
-        page += '<div id="text-content">%s</div>'  % (get_today_article(user_freq_record, session['articleID']))
+        page += '<div id="text-content">%s</div>' % (get_today_article(user_freq_record, session['articleID']))
         page += '<p><b>收集生词吧</b> （可以在正文中划词，也可以复制黏贴）</p>'
         page += '<form method="post" action="/%s">' % (username)
         page += ' <textarea name="content" id="selected-words" rows="10" cols="120"></textarea><br/>'
@@ -343,10 +330,10 @@ def userpage(username):
                    document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);
                  </script>
                  '''
-        
+
         d = load_freq_history(user_freq_record)
         if len(d) > 0:
-            page += '<p><b>我的生词簿</b></p>'
+            page += '<div id="myWords"><p><b>我的生词簿</b></p></div>'
             lst = pickle_idea2.dict2lst(d)
             lst2 = []
             for t in lst:
@@ -354,14 +341,18 @@ def userpage(username):
             for x in sort_in_descending_order(lst2):
                 word = x[0]
                 freq = x[1]
-                if isinstance(d[word], list): # d[word] is a list of dates
+                if isinstance(d[word], list):  # d[word] is a list of dates
                     if freq > 1:
-                        page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>) <a href="%s/%s/familiar">熟悉</a> <a href="%s/%s/unfamiliar">不熟悉</a>  </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word,username,word)
+                        page += '<p class="new-word"> <a href="%s">%s</a>                     (<a title="%s">%d</a>) </p>\n' % (
+                        youdao_link(word), word, '; '.join(d[word]), freq)
                     else:
-                        page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>) <a href="%s/%s/familiar">熟悉</a> <a href="%s/%s/unfamiliar">不熟悉</a>   </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word,username,word)
-                elif isinstance(d[word], int): # d[word] is a frequency. to migrate from old format.
+                        page += '<p class="new-word"> <a href="%s">%s</a> <font color="white">(<a title="%s">%d</a>)</font> </p>\n' % (
+                        youdao_link(word), word, '; '.join(d[word]), freq)
+                elif isinstance(d[word], int):  # d[word] is a frequency. to migrate from old format.
                     page += '<a href="%s">%s</a>%d\n' % (youdao_link(word), word, freq)
+
         return page
+
 
 ### Sign-up, login, logout ###
 @app.route("/signup", methods=['GET', 'POST'])
@@ -397,7 +388,8 @@ def login():
         if not session.get('logged_in'):
             return render_template('login.html')
         else:
-            return '你已登录 <a href="/%s">%s</a>。 登出点击<a href="/logout">这里</a>。' % (session['username'], session['username'])
+            return '你已登录 <a href="/%s">%s</a>。 登出点击<a href="/logout">这里</a>。' % (
+            session['username'], session['username'])
     elif request.method == 'POST':
         # check database and verify user
         username = request.form['username']
@@ -422,9 +414,9 @@ def logout():
 
 
 if __name__ == '__main__':
-    #app.secret_key = os.urandom(16)
-    #app.run(debug=False, port='6000')
-    app.run(debug=True)        
-    #app.run(debug=True, port='6000')
-    #app.run(host='0.0.0.0', debug=True, port='6000')
+    # app.secret_key = os.urandom(16)
+    # app.run(debug=False, port='6000')
+    app.run(debug=True)
+    # app.run(debug=True, port='6000')
+    # app.run(host='0.0.0.0', debug=True, port='6000')
 
