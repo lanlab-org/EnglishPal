@@ -320,6 +320,7 @@ def userpage(username):
         page += '<meta name="format-detection" content="telephone=no" />\n' # forbid treating numbers as cell numbers in smart phones
         page += '<title>EnglishPal Study Room for %s</title>' % (username)
         page += '<p><b>English Pal for <font color="red">%s</font></b> <a href="/logout">登出</a></p>' % (username)
+	page += '<p><a href="#myWords">背生词</a></p>'
         page += '<p><a href="/%s/reset">下一篇</a></p>' % (username)
         page += '<p><b>阅读文章并回答问题</b></p>\n'
         page += '<div id="text-content">%s</div>'  % (get_today_article(user_freq_record, session['articleID']))
@@ -346,7 +347,7 @@ def userpage(username):
         
         d = load_freq_history(user_freq_record)
         if len(d) > 0:
-            page += '<p><b>我的生词簿</b></p>'
+            page += '<div id="myWords"><p><b>我的生词簿</b></p></div>'
             lst = pickle_idea2.dict2lst(d)
             lst2 = []
             for t in lst:
