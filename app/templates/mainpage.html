@@ -11,7 +11,7 @@
 {% if username %}
     <a href="user">user</a>
 {% else %}
-    <p><a href="/login">登录</a> |  <a href="/signup">成为会员</a>  | <a href="/static/usr/instructions.html">使用说明</a></p>
+    <p><a href="/login">登录</a>  <a href="/signup">成为会员</a>  <a href="/static/usr/instructions.html">使用说明</a></p>
 {% endif %}
 <p><b>{{random_ads}}. <a href="/signup">试试</a> 吧！</b></p>
     <p>粘帖1篇文章 (English only)</p>
@@ -21,7 +21,7 @@
       <input type="reset" value="清除"/>
     </form>
 <p><b>最常见的词</b></p>
-<div style="margin-left: 5px; margin-right: 5px; padding: 5px;">
+<div>
 {% for i in range(word) %}
     <a style="padding: 5px;" href="{{youdao[i]}}">{{getWord[i]}}</a> {{getwordNum[i]}}
 {% endfor %}

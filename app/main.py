@@ -16,6 +16,7 @@ from datetime import datetime
 from flask import Flask, request, redirect, render_template, url_for, session, abort, flash
 from difficulty import get_difficulty_level, text_difficulty_level, user_difficulty_level
 
+
 app = Flask(__name__)
 app.secret_key = 'lunch.time!'
 
@@ -50,7 +51,7 @@ def add_user(username, password):
     rq.instructions("INSERT INTO user Values ('%s', '%s', '%s', '%s')" % (username, password, start_date, expiry_date))
     rq.do()
 
-    
+
 def check_username_availability(username):
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
     rq.instructions("SELECT * FROM user WHERE name='%s'" % (username))
@@ -67,7 +68,6 @@ def get_expiry_date(username):
         return  result[0]['expiry_date']
     else:
         return '20191024'
-    
 
 
 def within_range(x, y, r):
@@ -75,7 +75,7 @@ def within_range(x, y, r):
 
 
 def get_today_article(user_word_list, articleID):
-    
+
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
     if articleID == None:    
         rq.instructions("SELECT * FROM article")
@@ -83,7 +83,7 @@ def get_today_article(user_word_list, articleID):
         rq.instructions('SELECT * FROM article WHERE article_id=%d' % (articleID))
     rq.do()
     result = rq.get_results()
-    
+
     # Choose article according to reader's level
     d1 = load_freq_history(path_prefix + 'static/frequency/frequency.p')
     d2 = load_freq_history(path_prefix + 'static/words_and_tests.p')
@@ -109,9 +109,8 @@ def get_today_article(user_word_list, articleID):
     s += '<p><b>%s</b></p>' % (get_question_part(d['question']))
     s = s.replace('\n', '<br/>')    
     s += '%s' % (get_answer_part(d['question']))
-    session['articleID'] = d['article_id']
+   # session['articleID'] = d['article_id']
     return s
-
 
 def appears_in_test(word, d):
     if not word in d:
@@ -152,23 +151,22 @@ def get_answer_part(s):
             result.append(line)
     # https://css-tricks.com/snippets/javascript/showhide-element/
     js = '''
-<script type="text/javascript">
+    <script type="text/javascript">
 
     function toggle_visibility(id) {
-       var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
+        var e = document.getElementById(id);
+        if(e.style.display == 'block')
+            e.style.display = 'none';
+        else
+            e.style.display = 'block';
     }
-</script>   
+    </script>   
     '''
     html_code = js
     html_code += '\n'
     html_code += '<button onclick="toggle_visibility(\'answer\');">ANSWER</button>\n'
     html_code += '<div id="answer" style="display:none;">%s</div>\n' % ('\n'.join(result))
     return html_code
-
 
 
 @app.route("/<username>/reset", methods=['GET', 'POST'])
@@ -193,7 +191,6 @@ def mark_word():
         return redirect(url_for('mainpage'))
     else:
         return 'Under construction'
-
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -297,41 +294,14 @@ def userpage(username):
             page += '<p><font color="grey">%d</font>: <a href="%s" title="%s">%s</a> (%d)  <input type="checkbox" name="marked" value="%s"></p>\n' % (count, youdao_link(x[0]), appears_in_test(x[0], words_tests_dict), x[0], x[1], x[0])
             count += 1
         page += '</form>\n'
+        
         return page
     
     elif request.method == 'GET': # when we load a html page
-        page = '<meta charset="UTF8">\n'
-        page += '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />\n'
-        page += '<meta name="format-detection" content="telephone=no" />\n' # forbid treating numbers as cell numbers in smart phones
-        page += '<title>EnglishPal Study Room for %s</title>' % (username)
-        page += '<p><b>English Pal for <font color="red">%s</font></b> <a href="/logout">登出</a></p>' % (username)
-        page += '<p><a href="/%s/reset">下一篇</a></p>' % (username)
-        page += '<p><b>阅读文章并回答问题</b></p>\n'
-        page += '<div id="text-content">%s</div>'  % (get_today_article(user_freq_record, session['articleID']))
-        page += '<p><b>收集生词吧</b> （可以在正文中划词，也可以复制黏贴）</p>'
-        page += '<form method="post" action="/%s">' % (username)
-        page += ' <textarea name="content" id="selected-words" rows="10" cols="120"></textarea><br/>'
-        page += ' <input type="submit" value="get 所有词的频率"/>'
-        page += ' <input type="reset" value="清除"/>'
-        page += '</form>\n'
-        page += ''' 
-                 <script>
-                   function getWord(){ 
-                       var word = window.getSelection?window.getSelection():document.selection.createRange().text;
-                       return word;
-                   }
-                   function fillinWord(){
-                       var element = document.getElementById("selected-words");
-                       element.value = element.value + " " + getWord();
-                   }
-                   document.getElementById("text-content").addEventListener("click", fillinWord, false);
-                   document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);
-                 </script>
-                 '''
-        
+        userpage = render_template("userpage.html", user=username, article=(get_today_article(user_freq_record, session['articleID'])))
+        page = ''
         d = load_freq_history(user_freq_record)
         if len(d) > 0:
-            page += '<p><b>我的生词簿</b></p>'
             lst = pickle_idea2.dict2lst(d)
             lst2 = []
             for t in lst:
@@ -346,7 +316,7 @@ def userpage(username):
                         page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>) <a href="%s/%s/familiar">熟悉</a> <a href="%s/%s/unfamiliar">不熟悉</a>   </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word,username,word)
                 elif isinstance(d[word], int): # d[word] is a frequency. to migrate from old format.
                     page += '<a href="%s">%s</a>%d\n' % (youdao_link(word), word, freq)
-        return page
+        return userpage + page
 
 ### Sign-up, login, logout ###
 @app.route("/signup", methods=['GET', 'POST'])

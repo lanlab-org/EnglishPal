@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnglishPal Study Room for {{user}}</title>
+</head>
+<body>
+    <p><b>EnglishPal for <font color="red">{{user}}</font></b> <a href="/logout">登出</a></p>
+    <p><a href="/{{user}}/reset">下一篇</a></p>
+    <p><b>阅读文章并回答问题</b></p>
+    <div id="text-content">{{ article | safe }}</div>
+    <p><b>收集生词吧</b> （可以在正文中划词，也可以复制黏贴）</p>
+        <form method="post" action="/{{user}}">
+         <textarea name="content" id="selected-words" rows="10" cols="120"></textarea><br/>
+         <input type="submit" value="get 所有词的频率"/>
+         <input type="reset" value="清除"/>
+        </form>
+    <p><b>我的生词簿</b></p>
+    <script>
+       
+        function getWord(){ 
+            var word = window.getSelection?window.getSelection():document.selection.createRange().text;
+            return word;
+        }
+        function fillinWord(){
+            var element = document.getElementById("selected-words");
+            element.value = element.value + " " + getWord();
+        }
+        document.getElementById("text-content").addEventListener("click", fillinWord, false);
+        document.getElementById("text-content").addEventListener("touchstart", fillinWord, false);
+    
+        </script>
+
+</body>
+</html>
