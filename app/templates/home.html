@@ -31,9 +31,14 @@
         <input type="reset" value="清除"/>
     </form>
     <p><b>最常见的词</b></p>
-    {% for i in n %}
-    <a href="{{parameter.yaodao[i]}}">{{parameter.word[i]}}</a> {{parameter.num[i]}}
-    {% endfor %}
+    <ul>
+        {% for i in range(parameter.n) %}
+        <li style="list-style: none;">
+            <a href="{{ parameter.youdao_link[i] }}">{{parameter.words[i]}}</a> {{parameter.num[i]}}
+        </li>
+        {% endfor %}
+    </ul>
+
 </form>
 </body>
 </html>

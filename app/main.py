@@ -241,7 +241,7 @@ def mainpage():
             'isLog_in': session.get('logged_in'),
              'username': username,
              'random_ads': get_random_ads(),
-             'youdao': youdao,
+             'youdao_link': youdao,
              'words': word,
               'num': num,
               'n': n
