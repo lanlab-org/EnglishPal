@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo 'Building..'
 		sh 'sudo docker build -t englishpal .'
-		sh 'sudo docker stop $(sudo docker ps -aq)'
+		sh 'sudo docker ps -aq && sudo docker stop $(sudo docker ps -aq)'
 		sh 'sudo docker run -d -p 91:80 -v /var/lib/jenkins/workspace/EnglishPal_Pipeline_master/app/static/frequency:/app/static/frequency -t englishpal'
             }
         }
