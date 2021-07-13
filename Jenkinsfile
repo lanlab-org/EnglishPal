@@ -11,6 +11,7 @@ pipeline {
         stage('BuildIt') {
             steps {
                 echo 'Building..'
+		sh 'sudo docker stop $(sudo docker ps -q --filter ancestor=englishpal)'
 		sh 'sudo docker build -t englishpal .'
 		sh 'sudo docker run -d -p 91:80 -v /var/lib/jenkins/workspace/EnglishPal_Pipeline_master/app/static/frequency:/app/static/frequency -t englishpal'
             }
