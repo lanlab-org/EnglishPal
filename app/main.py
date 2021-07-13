@@ -38,8 +38,8 @@ def load_freq_history(path):
 
 def verify_user(username, password):
     rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
-    rq.instructions("SELECT * FROM user WHERE name='%s' AND password='%s'" % (username, password))
-    rq.do()
+    rq.instructions_with_parameters("SELECT * FROM user WHERE name=? AND password=?", (username, password))
+    rq.do_with_parameters()
     result = rq.get_results()
     return result != []
 
@@ -228,7 +228,7 @@ def mainpage():
                </head>
                <body>
         '''
-        page += '<p><b><font size="+3" color="red">English Pal - Learn English in a smart way!</font></b></p>'
+        page += '<p><b><font size="+3" color="red">English Pal -(SPM-Spring2021-2599-张小飞201831990641) Learn English in a smart way!</font></b></p>'
         if session.get('logged_in'):
             page += ' <a href="%s">%s</a></p>\n' % (session['username'], session['username'])
         else:

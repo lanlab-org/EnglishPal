@@ -11,35 +11,25 @@ driver.implicitly_wait(10)
 
 HOME_PAGE = 'http://121.4.94.30:5000/'
 
-
-
-def test_signup():
+def test_login_security_fix():
     try:
         driver.get(HOME_PAGE)
-        driver.save_screenshot('test_signup_pic0.png')
         
-        assert 'English Pal -' in driver.page_source
-    
-        elem = driver.find_element_by_link_text('成为会员')
+        elem = driver.find_element_by_link_text('登录')
         elem.click()
-    
-        uname = ''.join ( [random.choice (string.ascii_letters) for x in range (8)] )
+        
+        uname = 'lanhui'
         elem = driver.find_element_by_name('username')
         elem.send_keys(uname)
-    
+        
         elem = driver.find_element_by_name('password')
-        elem.send_keys('iamc00l!')
-    
-        driver.save_screenshot('test_signup_pic1.png')
+        # 使用原有漏洞密码登录
+        elem.send_keys("' or 'a'='a'or'a'='a")
         
         elem = driver.find_element_by_xpath('//form[1]/p[3]/input[1]') # 找到登录按钮
         elem.click()
-    
-        driver.save_screenshot('test_signup_pic2.png')
         
-        assert '恭喜，你已成功注册' in driver.page_source
-        assert uname in driver.page_source
+        driver.save_screenshot('./app/test/test_login_security_fix0.png')
+        assert '无法通过验证。' in driver.page_source
     finally:
         driver.quit()
-
-

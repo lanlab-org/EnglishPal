@@ -9,7 +9,7 @@ import random, string
 driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.CHROME)
 driver.implicitly_wait(10)
 
-HOME_PAGE = 'http://121.4.94.30:91/'
+HOME_PAGE = 'http://121.4.94.30:5000/'
 
 
 
@@ -59,5 +59,6 @@ def test_login():
     
         driver.save_screenshot('./app/test/test_login_pic4.png')    
         assert 'EnglishPal Study Room for ' + uname in  driver.title
+
     finally:
         driver.quit()

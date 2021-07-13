@@ -9,7 +9,7 @@ import random, string, time
 driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.CHROME)
 driver.implicitly_wait(10)
 
-HOME_PAGE = 'http://121.4.94.30:91/'
+HOME_PAGE = 'http://121.4.94.30:5000/'
 
 
 
@@ -42,7 +42,7 @@ def test_next():
     
         # click Next
         diff = 0
-        for i in range(5):
+        for i in range(10):
             elem = driver.find_element_by_link_text('下一篇')
             elem.click()
             driver.save_screenshot('./app/test/test_next_essay_pic1.png')
