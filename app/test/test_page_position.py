@@ -47,7 +47,7 @@ def test_page_position():
 
         driver.find_element_by_xpath('//form[1]/p[3]/input[1]').click()  # 找到登录按钮
 
-
+        
         # 这里随机测试一个单词，点击不熟悉
         click_by_random('不熟悉')
 
@@ -56,3 +56,4 @@ def test_page_position():
 
     finally:
         driver.quit()
+
