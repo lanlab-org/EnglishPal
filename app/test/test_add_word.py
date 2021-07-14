@@ -19,7 +19,6 @@ def has_punctuation(s):
 def test_add_word():
     try:
         driver.get(HOME_PAGE)
-        print(driver.page_source)
         assert 'English Pal -' in driver.page_source
     
         # login
