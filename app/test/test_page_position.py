@@ -9,7 +9,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.CHROME)
+driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.FIREFOX)
 driver.implicitly_wait(10)
 
 HOME_PAGE = 'http://121.4.94.30:91/'

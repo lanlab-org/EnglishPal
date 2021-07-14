@@ -10,7 +10,7 @@ import string
 # 调用本地chromedriver
 # driver = webdriver.Chrome(executable_path="D:\ChromeDriver\chromedriver.exe")
 # driver.get("http://127.0.0.1:5000/")
-driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.CHROME)
+driver = webdriver.Remote('http://localhost:4444/wd/hub', DesiredCapabilities.FIREFOX)
 driver.implicitly_wait(10)
 # driver.maximize_window()
 # HOME_PAGE = "http://127.0.0.1:5000/"
