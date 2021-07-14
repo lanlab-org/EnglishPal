@@ -45,8 +45,8 @@ def test_add_word():
     
         elem = driver.find_element_by_id('selected-words')
         word = random.choice(essay_content.split())
-        while 'font>' in word or 'br>' in word or 'p>' in word or len(word) < 5 or has_punctuation(word):
-            word = random.choice(essay_content.split())        
+        while 'font>' in word or 'br>' in word or 'p>' in word or len(word) < 6 or has_punctuation(word):
+            word = random.choice(essay_content.split())
 
         elem.send_keys(word)
 
