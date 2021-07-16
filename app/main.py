@@ -30,6 +30,13 @@ def get_random_ads():
     ads = random.choice(['个性化分析精准提升', '你的专有单词本', '智能捕捉阅读弱点，针对性提高你的阅读水平'])
     return ads + '。 <a href="/signup">试试</a>吧！'
 
+def total_number_of_essays():
+    rq = RecordQuery(path_prefix + 'static/wordfreqapp.db')
+    rq.instructions("SELECT * FROM article")
+    rq.do()
+    result = rq.get_results()
+    return  len(result)
+
 def load_freq_history(path):
     d = {}
     if os.path.exists(path):
@@ -235,6 +242,7 @@ def mainpage():
             page += '<p><a href="/login">登录</a>  <a href="/signup">成为会员</a> <a href="/static/usr/instructions.html">使用说明</a></p>\n'
         #page += '<p><img src="%s" width="400px" alt="advertisement"/></p>' % (get_random_image(path_prefix + 'static/img/'))
         page += '<p><b>%s</b></p>' % (get_random_ads())
+        page += '<p>共有文章%d篇</b>' % (total_number_of_essays())
         page += '<p>粘帖1篇文章 (English only)</p>'
         page += '<form method="post" action="/">'
         page += ' <textarea name="content" rows="10" cols="120"></textarea><br/>'
