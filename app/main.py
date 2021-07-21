@@ -275,6 +275,7 @@ def unfamiliar(username,word):
     user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
     pickle_idea.unfamiliar(user_freq_record,word)
     session['thisWord'] = word  # 1. put a word into session
+    session['time'] = 1
     return redirect(url_for('userpage', username=username))
 
 @app.route("/<username>/<word>/familiar", methods=['GET', 'POST'])
@@ -282,6 +283,7 @@ def familiar(username,word):
     user_freq_record = path_prefix + 'static/frequency/' + 'frequency_%s.pickle' % (username)
     pickle_idea.familiar(user_freq_record,word)
     session['thisWord'] = word  # 1. put a word into session
+    session['time'] = 1
     return redirect(url_for('userpage', username=username))
 
 @app.route("/<username>", methods=['GET', 'POST'])
@@ -348,7 +350,12 @@ def userpage(username):
         if session.get('thisWord'):
             page += '''
                    <script type="text/javascript">
-                       location.href = "#aaa"  // 2. define a anchor URL and point to the anchor in the page whose id is aaa
+                        //point to the anchor in the page whose id is aaa if it exists
+                        window.onload = function(){
+                            var element = document.getElementsByName("aaa");
+                            if (element != null)
+                                document.getElementsByName("aaa")[0].scrollIntoView(true);
+                        }
                    </script> 
                    '''
 
@@ -362,8 +369,9 @@ def userpage(username):
             for x in sort_in_descending_order(lst2):
                 word = x[0]
                 freq = x[1]
-                if session.get('thisWord') == x[0]:
+                if session.get('thisWord') == x[0] and session.get('time') == 1:
                     page += '<a name="aaa"></a>'    # 3. anchor
+                    session['time'] = 0   # discard anchor
                 if isinstance(d[word], list): # d[word] is a list of dates
                     if freq > 1:
                         page += '<p class="new-word"> <a href="%s">%s</a>(<a title="%s">%d</a>) <a href="%s/%s/familiar">熟悉</a> <a href="%s/%s/unfamiliar">不熟悉</a>  </p>\n' % (youdao_link(word), word, '; '.join(d[word]), freq,username, word,username,word)
