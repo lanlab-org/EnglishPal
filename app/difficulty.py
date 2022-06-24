@@ -55,11 +55,17 @@ def get_difficulty_level(d1, d2):
 
 def revert_dict(d):
     '''
-    In d2, time is the key, and the value is a list of words picked at that time.
+    In d, word is the key, and value is a list of dates.
+    In d2 (the returned value of this function), time is the key, and the value is a list of words picked at that time.
     '''
     d2 = {}
     for k in d:
-        lst = d[k]
+        if type(d[k]) is list:  # d[k] is a list of dates.
+            lst = d[k]
+        elif type(d[k]) is int: # for backward compatibility.  d was sth like {'word':1}.  The value d[k] is not a list of dates, but a number representing how frequent this word had been added to the new word book. 
+            freq = d[k]
+            lst = freq*['2021082019'] # why choose this date?  No particular reasons.  I fix the bug in this date.
+
         for time_info in lst:
             date = time_info[:10] # until hour
             if not date in d2:

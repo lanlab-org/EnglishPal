@@ -4,11 +4,42 @@
 You're logged in already!
 
 {% else %}
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
-<form action="/login" method="POST">
-  <p><input type="username" name="username" placeholder="邮箱地址、电话号码"></p>
-  <p><input type="password" name="password" placeholder="密码"></p>
-  <p><input type="submit" value="登录"></p>
+    <style>
+     .title{
+       margin: 0 auto 30px auto;
+    text-align: center;
+   }
+
+    div{
+        margin-top:80px;
+    }
+    strong{
+        color: red;
+    }
+
+    a {
+       font-size: 10pt;
+       color: black;
+       text-align: left;
+       text-decoration: underline;
+       TEXT-DECORATION:none;
+}
+    </style>
+<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+<div align="center">
+    <form action="/login" method="POST" >
+        <h3 class="title">尊敬的游客你好，欢迎使用<strong>Englishpal</strong>!</h3>
+  <p>
+      账号：<input type="username" name="username" placeholder="邮箱地址、电话号码">
+  </p>
+  <p>
+      密码：<input type="password" name="password" placeholder="密码">
+  </p>
+  <p class="login">
+      <input type="submit" value="登录">&nbsp
+      <button><a href="/signup">注册</a></button>
+  </p>
+
 </form>
 {% endif %}
 {% endblock %}
