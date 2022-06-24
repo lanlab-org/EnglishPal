@@ -1,0 +1,32 @@
+<html>
+<style>
+    div{
+
+        margin-top: 100px;
+    }
+    input{
+        margin-top: 20px;
+        margin-right: 10px;
+    }
+
+
+</style>
+    <body>
+    <div  align="center">
+        <h4>重设密码</h4>
+    <form action="/reset" method='POST'>
+        <p><b>你好，尊敬的 <font color="red">{{ username }}</font>用户</b></p>
+        旧密码:
+        <input type="password" name="old-password" />
+        <br/>
+        新密码:
+        <input type="password" name="new-password" />
+        <br/>
+        <div1>
+        <input type="submit" name="submit" value="提交" />
+        <input type="button" name="submit" value="放弃修改" onclick="window.location.href='/{{ username }}'"/>
+        </div1>
+    </form>
+    </div>
+    </body>
+</html>

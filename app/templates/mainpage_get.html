@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+
+    {{ yml['header'] | safe }}
+    {% if yml['css']['item'] %}
+        {% for css in yml['css']['item'] %}
+        <link href="{{ css }}" rel="stylesheet">
+        {% endfor %}
+    {% endif %}
+    {% if yml['js']['head'] %}
+        {% for js in yml['js']['head'] %}
+            <script src="{{ js }}" ></script>
+        {% endfor %}
+    {% endif %}
+
+    <title>EnglishPal 英文单词高效记</title>
+
+</style>
+</head>
+<body>
+    <div class="container-fluid">
+        <p><b><font size="+3" color="red">English Pal - Learn English smartly!</font></b></p>
+        {% if session['logged_in'] %}
+            <a href="/{{session['username']}}">{{session['username']}}</a></p>
+        {% else %}
+            <p><a href="/login">登录</a>  <a href="/signup">注册</a> <a href="/static/usr/instructions.html">使用说明</a></p >
+            <p><b>{{random_ads|safe}}</b></p>
+        {% endif %}
+        <div class="alert alert-success" role="alert">共有文章 <span class="badge bg-success"> {{number_of_essays}} </span> 篇</div>
+        <p>粘贴1篇文章 (English only)</p>
+        <form method="post" action="/">
+            <textarea name="content" rows="10" cols="120"></textarea><br/>
+            <input type="submit" value="get文章中的词频"/>
+            <input type="reset" value="清除"/>
+        </form>
+        {% if d_len > 0 %}
+            <p><b>最常见的词</b></p>
+            {% for x in lst if x[1]>99 %}
+                <a href="http://youdao.com/w/eng/{{x[0]}}/#keyfrom=dict2.index">{{x[0]}}</a> {{x[1]}}
+            {% endfor %}
+        {% endif %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </div>
+    {{ yml['footer'] | safe }}
+{% if yml['js']['bottom'] %}
+        {% for js in yml['js']['bottom'] %}
+            <script src="{{ js }}" ></script>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

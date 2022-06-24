@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
+    <meta name="format-detection" content="telephone=no" />
+
+    {{ yml['header'] | safe }}
+    {% if yml['css']['item'] %}
+        {% for css in yml['css']['item'] %}
+        <link href="{{ css }}" rel="stylesheet">
+        {% endfor %}
+    {% endif %}
+    {% if yml['js']['head'] %}
+        {% for js in yml['js']['head'] %}
+            <script src="{{ js }}" ></script>
+        {% endfor %}
+    {% endif %}
+
+    <title>EnglishPal Study Room for {{username}}</title>
+</head>
+<body>
+     <p>勾选不认识的单词</p>
+      <form method="post" action="/{{username}}/mark">
+       <input type="submit" name="add-btn" value="加入我的生词簿"/>
+       {% for x in lst %}
+          {% set word = x[0]%}
+        <p>
+            <font color="grey">{{loop.index}}</font>
+            :
+            <a href='http://youdao.com/w/eng/{{word}}/#keyfrom=dict2.index' title={{word}}>{{word}}</a>
+            ({{x[1]}})
+            <input type="checkbox" name="marked" value={{word}}>
+        </p>
+
+       {% endfor %}
+       </form>
+    {{ yml['footer'] | safe }}
+    {% if yml['js']['bottom'] %}
+        {% for js in yml['js']['bottom'] %}
+            <script src="{{ js }}" ></script>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

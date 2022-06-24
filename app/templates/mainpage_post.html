@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {{ yml['header'] | safe }}
+    {% if yml['css']['item'] %}
+        {% for css in yml['css']['item'] %}
+        <link href="{{ css }}" rel="stylesheet">
+        {% endfor %}
+    {% endif %}
+    {% if yml['js']['head'] %}
+        {% for js in yml['js']['head'] %}
+            <script src="{{ js }}" ></script>
+        {% endfor %}
+    {% endif %}
+
+</head>
+<body>
+    <form method="post" action="/mark">
+    {% for x in lst %}
+        <p>
+            <font color="grey">{{loop.index}}</font>
+            :
+            <a href="http://youdao.com/w/eng/{{x[0]}}/#keyfrom=dict2.index">{{x[0]}}</a>
+            ({{x[1]}})
+            <input type="checkbox" name="marked" value="{{x[0]}}">
+        </p>
+    {% endfor %}
+    <input type="submit" value="确定并返回"/>
+    </form>
+    {{ yml['footer'] | safe }}
+{% if yml['js']['bottom'] %}
+        {% for js in yml['js']['bottom'] %}
+            <script src="{{ js }}" ></script>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

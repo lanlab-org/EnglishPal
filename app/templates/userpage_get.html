@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes"/>
+    <meta name="format-detection" content="telephone=no"/>
+
+    {{ yml['header'] | safe }}
+    {% if yml['css']['item'] %}
+        {% for css in yml['css']['item'] %}
+            <link href="{{ css }}" rel="stylesheet">
+        {% endfor %}
+    {% endif %}
+    {% if yml['js']['head'] %}
+        {% for js in yml['js']['head'] %}
+            <script src="{{ js }}"></script>
+        {% endfor %}
+    {% endif %}
+
+    <title>EnglishPal Study Room for {{ username }}</title>
+</head>
+<body>
+<div class="container-fluid">
+    <p><b>English Pal for <font color="red">{{ username }}</font></b>
+        <a class="btn btn-secondary" href="/logout" role="button">退出</a>
+        <a class="btn btn-secondary" href="/reset" role="button">重设密码</a>
+    </p>
+    {{ flashed_messages|safe }}
+
+    <p><a class="btn btn-success" href="/{{ username }}/reset" role="button"> 下一篇 Next Article </a></p>
+    <p><b>阅读文章并回答问题</b></p>
+    <div id="text-content">{{ today_article|safe }}</div>
+
+    <input type="checkbox" onclick="ChangeHighlight()" checked/>生词高亮
+    <input type="checkbox" onclick="onReadClick()" checked/>大声朗读
+    <input type="checkbox" onclick="onChooseClick()" checked/>划词入库
+
+    <p><b>收集生词吧</b> （可以在正文中划词，也可以复制黏贴）</p>
+    <form method="post" action="/{{ username }}">
+        <textarea name="content" id="selected-words" rows="10" cols="120"></textarea><br/>
+        <input type="submit" value="把生词加入我的生词库"/>
+        <input type="reset" value="清除"/>
+    </form>
+    {% if session.get['thisWord'] %}
+        <script type="text/javascript">
+            //point to the anchor in the page whose id is aaa if it exists
+            window.onload = function () {
+                var element = document.getElementsByName("aaa");
+                if (element != null)
+                    document.getElementsByName("aaa")[0].scrollIntoView(true);
+            }
+        </script>
+    {% endif %}
+
+    {% if d_len > 0 %}
+        <p><b>我的生词簿</b></p>
+        {% for x in lst3 %}
+            {% set word = x[0] %}
+
+            {% set freq = x[1] %}
+            {% if session.get('thisWord') == x[0] and session.get('time') == 1 %}
+                <a name="aaa"></a>
+            {% endif %}
+            {% if freq > 1 %}
+                <p class="new-word">
+                    <a class="btn btn-light" href='http://youdao.com/w/eng/{{ word }}/#keyfrom=dict2.index'
+                       role="button">{{ word }}</a>
+                    (
+                    <a title="{{ word }}">{{ freq }}</a>
+                    )
+
+                    <a class="btn btn-success" href={{ username }}/{{ word }}/familiar role="button">熟悉</a>
+                    <a class="btn btn-warning" href={{ username }}/{{ word }}/unfamiliar role="button">不熟悉</a>
+                    <a class="btn btn-danger" href={{ username }}/{{ word }}/del role="button">删除</a>
+                </p>
+            {% else %}
+                <p class="new-word">
+                    <a class="btn btn-light" href='http://youdao.com/w/eng/{{ word }}/#keyfrom=dict2.index'
+                       role="button">{{ word }}</a>
+                    (
+                    <a title="{{ word }}">{{ freq }}</a>
+                    )
+                    <a class="btn btn-success" href={{ username }}/{{ word }}/familiar role="button">熟悉</a>
+                    <a class="btn btn-warning" href={{ username }}/{{ word }}/unfamiliar role="button">不熟悉</a>
+                    <a class="btn btn-danger" href={{ username }}/{{ word }}/del role="button">删除</a>
+                </p>
+            {% endif %}
+        {% else %}
+            <a href='http://youdao.com/w/eng/{{ word }}/#keyfrom=dict2.index'>{{ word }}</a>{{ freq }}
+        {% endfor %}
+        <input id="selected-words2" type="hidden" value="{{ words }}">
+    {% endif %}
+</div>
+{{ yml['footer'] | safe }}
+{% if yml['js']['bottom'] %}
+    {% for js in yml['js']['bottom'] %}
+        <script src="{{ js }}"></script>
+    {% endfor %}
+{% endif %}
+</body>
+<style>
+    mark {
+    color: #{{ yml['highlight']['color'] }};
+    background-color: rgba(0,0,0,0);
+}
+</style>
+
+</html>

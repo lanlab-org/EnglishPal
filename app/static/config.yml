@@ -1,0 +1,17 @@
+# 全局引入的css文件地址
+css:
+  item:
+    - static/css/bootstrap.css
+
+# 全局引入的js文件地址
+js:
+  head: # 在页面加载之前加载
+    # - static/js/APlayer.js
+    # - static/js/Meting.js
+  bottom: # 在页面加载完之后加载
+    - static/js/fillword.js
+    - static/js/highlight.js
+
+# 高亮样式，目前仅支持修改颜色
+highlight:
+  color: ff0000

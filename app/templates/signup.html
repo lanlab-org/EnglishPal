@@ -6,13 +6,24 @@ You're logged in already! <a href="/logout">Logout</a>.
 {% else %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0, user-scalable=yes" />
 <p>{{ get_flashed_messages()[0] | safe }}</p>
-
-<p>Sign up here.</p>
+    <style>
+    div{
+        margin-top: 80px;
+        text-align: center;
+    }
+.p{
+    margin-right: 50px;
+}
+    </style>
+<div>
+    <h3>注册界面</h3>
 
 <form action="/signup" method="POST">
-  <p><input type="username" name="username" placeholder="邮箱地址、电话号码"></p>
-  <p><input type="password" name="password" placeholder="密码"></p>  
+  <p>账号：&nbsp<input type="username" name="username" placeholder="邮箱地址、电话号码" required="required"></p>
+  <p>密码：&nbsp<input type="password" name="password" placeholder="密码"></p>
+    <p>确认密码:<input type="password" name="password" placeholder="密码"></p>
   <p><input type="submit" value="注册"></p>
+</div>
 </form>
 {% endif %}
 {% endblock %}
